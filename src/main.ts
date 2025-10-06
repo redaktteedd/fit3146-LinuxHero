@@ -18,7 +18,7 @@ function createWindow(): void {
   });
 
   // Load the index.html file
-  mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
+  mainWindow.loadFile(path.join(__dirname, '../renderer/main/index.html'));
 
   // Show window when ready to prevent visual flash
   mainWindow.once('ready-to-show', () => {
