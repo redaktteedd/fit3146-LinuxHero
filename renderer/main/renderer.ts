@@ -9,7 +9,7 @@ interface TerminalCommands {
     [key: string]: TerminalCommand;
 }
 
-class TerminalApp {
+export class TerminalApp {
     private terminalContent: HTMLElement | null;
     private terminalBody: HTMLElement | null;
     private currentInput: string = '';
@@ -198,7 +198,7 @@ class TerminalApp {
         }
     }
 
-    private addOutput(text: string): void {
+    public addOutput(text: string): void {
         if (!text || !this.terminalContent) return;
         
         const outputDiv = document.createElement('div');
