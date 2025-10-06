@@ -1,3 +1,5 @@
+import { loadReadPuzzle, Puzzle } from "../common/puzzles";
+
 // Terminal-like renderer process TypeScript
 interface TerminalCommand {
     (args: string[]): string;
@@ -14,9 +16,8 @@ class TerminalApp {
     private commandHistory: string[] = [];
     private historyIndex: number = -1;
     
-    // Math puzzle state
-    private mathPuzzle: { question: string; answer: number } | null = null;
     private puzzleSolved: boolean = false;
+    private activatePuzzle: Puzzle | null = null;
     
     private commands: TerminalCommands = {
         help: () => 'Available commands:\n  help - Show this help message\n  clear - Clear the terminal\n  echo <text> - Echo text\n  date - Show current date\n  whoami - Show current user\n  ls - List files\n  pwd - Show current directory\n  puzzle - Start a math puzzle\n  solve <answer> - Submit your puzzle answer',
@@ -25,6 +26,18 @@ class TerminalApp {
                 this.terminalContent.innerHTML = '';
             }
             return '';
+        },
+        cat: (args: string[]) => {
+            if(!this.activatePuzzle) {
+                return 'No puzzle is active! Type "puzzle" to start one.';
+            }
+            const filename = args[0];
+            const file = this.activatePuzzle.files.find(f => f.name === filename);  
+            if (file) {
+                return file.content;
+            } else {
+                return `cat: ${filename}: No such file or directory`;
+            }
         },
         echo: (args: string[]) => args.join(' '),
         date: () => new Date().toString(),
@@ -45,9 +58,6 @@ class TerminalApp {
             console.error('Terminal elements not found');
             return;
         }
-
-
-        
         // Add initial prompt
         this.addPrompt();
         
@@ -65,34 +75,10 @@ class TerminalApp {
         document.title = 'Terminal App - Ready!';
     }
 
-    private startPuzzle(): string {
-        const num1 = Math.floor(Math.random() * 20) + 1;
-        const num2 = Math.floor(Math.random() * 20) + 1;
-        const operators = ['+', '-', '*'];
-        const operator = operators[Math.floor(Math.random() * operators.length)];
-        
-        let answer: number;
-        switch (operator) {
-            case '+':
-                answer = num1 + num2;
-                break;
-            case '-':
-                answer = num1 - num2;
-                break;
-            case '*':
-                answer = num1 * num2;
-                break;
-            default:
-                answer = 0;
-        }
-        
-        this.mathPuzzle = {
-            question: `What is ${num1} ${operator} ${num2}?`,
-            answer: answer
-        };
-        
-        this.displayPuzzleBox(this.mathPuzzle.question);
-        return '';
+    private async startPuzzle(): Promise<string> {
+        this.activatePuzzle = await loadReadPuzzle();
+        this.displayPuzzleBox(this.activatePuzzle.description);
+        return 'Puzzle started! Use "cat <filename>" to read files and "solve <answer>" to submit your answer.';
     }
     
     private displayPuzzleBox(question: string): void {
@@ -126,15 +112,15 @@ class TerminalApp {
     }
 
     private solvePuzzle(args: string[]): string {
-        if (!this.mathPuzzle) {
+        if (!this.activatePuzzle) {
             return 'No puzzle is active! Type "puzzle" to start one.';
         }
         
-        if (args.length === 0 || !args[0]) {
+        if (args.length === 0) {
             return 'Usage: solve <answer>\nExample: solve 42';
         }
         
-        const userAnswer = parseInt(args[0]);
+        const userAnswer = args.join(' ');
         
         if (isNaN(userAnswer)) {
             return 'Please provide a valid number.\nUsage: solve <answer>';
