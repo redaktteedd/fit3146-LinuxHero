@@ -14,7 +14,9 @@ function createWindow(): void {
       contextIsolation: false
     },
     titleBarStyle: 'default',
-    show: false // Don't show until ready
+    show: false, // Don't show until ready
+    fullscreen: false,
+    backgroundColor: '#ffffff'
   });
 
   // Load the index.html file
