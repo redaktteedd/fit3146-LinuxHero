@@ -11,6 +11,9 @@ out/
 
 # TypeScript
 *.tsbuildinfo
+*.d.ts
+*.d.ts.map
+*.js.map
 
 # Environment variables
 .env
