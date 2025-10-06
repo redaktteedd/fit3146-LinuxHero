@@ -12,7 +12,7 @@ export interface Puzzle{
 //Function to load a file from the assets/puzzles directory
 export async function loadFile(filename: string): Promise<File>{
     try {
-        const response = await fetch(`../../assets/puzzles/${filename}`);
+        const response = await fetch(`file://${process.cwd()}/assets/puzzles/${filename}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -28,9 +28,8 @@ export async function loadFile(filename: string): Promise<File>{
 export async function loadReadPuzzle(): Promise<Puzzle>{
     const files = await Promise.all([loadFile("clue1.txt"), loadFile("clue2.txt"), loadFile("clue3.txt")]);
     return {
-        description: "Read the files to find the secret code.",
+        description: "Read the files to find the secret code. Use 'ls' to list files and 'cat' to read them.",
         files: files,
-        solution: ["cat clue1.txt", "cat clue2.txt", "cat clue3.txt"]
+        solution: ["FIT", "3146", "SECRET"]
     };
-    
 }

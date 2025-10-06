@@ -1,4 +1,4 @@
-import { loadReadPuzzle, Puzzle } from "../common/puzzles";
+import { loadReadPuzzle, Puzzle } from "../common/puzzles.js";
 
 // Terminal-like renderer process TypeScript
 interface TerminalCommand {
@@ -20,7 +20,7 @@ class TerminalApp {
     private activatePuzzle: Puzzle | null = null;
     
     private commands: TerminalCommands = {
-        help: () => 'Available commands:\n  help - Show this help message\n  clear - Clear the terminal\n  echo <text> - Echo text\n  date - Show current date\n  whoami - Show current user\n  ls - List files\n  pwd - Show current directory\n  puzzle - Start a math puzzle\n  solve <answer> - Submit your puzzle answer',
+        help: () => 'Available commands:\n  help - Show this help message\n  clear - Clear the terminal\n  echo <text> - Echo text\n  date - Show current date\n  whoami - Show current user\n  ls - List files\n  pwd - Show current directory\n  cat <filename> - Read a file\n  puzzle - Start a puzzle\n  solve <answer> - Submit your puzzle answer',
         clear: () => {
             if (this.terminalContent) {
                 this.terminalContent.innerHTML = '';
@@ -30,6 +30,9 @@ class TerminalApp {
         cat: (args: string[]) => {
             if(!this.activatePuzzle) {
                 return 'No puzzle is active! Type "puzzle" to start one.';
+            }
+            if (args.length === 0) {
+                return 'cat: missing file operand\nTry "ls" to see available files.';
             }
             const filename = args[0];
             const file = this.activatePuzzle.files.find(f => f.name === filename);  
@@ -42,7 +45,18 @@ class TerminalApp {
         echo: (args: string[]) => args.join(' '),
         date: () => new Date().toString(),
         whoami: () => 'user',
-        ls: () => 'total 8\ndrwxr-xr-x  2 user user 4096 Jan  1 12:00 .\ndrwxr-xr-x  3 user user 4096 Jan  1 12:00 ..\n-rw-r--r--  1 user user  220 Jan  1 12:00 .bashrc\n-rw-r--r--  1 user user 3526 Jan  1 12:00 .bash_history',
+        ls: () => {
+            if (!this.activatePuzzle) {
+                return 'total 8\ndrwxr-xr-x  2 user user 4096 Jan  1 12:00 .\ndrwxr-xr-x  3 user user 4096 Jan  1 12:00 ..\n-rw-r--r--  1 user user  220 Jan  1 12:00 .bashrc\n-rw-r--r--  1 user user 3526 Jan  1 12:00 .bash_history';
+            }
+            let output = 'total ' + (this.activatePuzzle.files.length * 4) + '\n';
+            output += 'drwxr-xr-x  2 user user 4096 Jan  1 12:00 .\n';
+            output += 'drwxr-xr-x  3 user user 4096 Jan  1 12:00 ..\n';
+            this.activatePuzzle.files.forEach(file => {
+                output += `-rw-r--r--  1 user user  ${file.content.length.toString().padStart(4)} Jan  1 12:00 ${file.name}\n`;
+            });
+            return output;
+        },
         pwd: () => '/home/user',
         puzzle: () => this.startPuzzle(),
         solve: (args: string[]) => this.solvePuzzle(args)
@@ -75,10 +89,19 @@ class TerminalApp {
         document.title = 'Terminal App - Ready!';
     }
 
-    private async startPuzzle(): Promise<string> {
-        this.activatePuzzle = await loadReadPuzzle();
-        this.displayPuzzleBox(this.activatePuzzle.description);
-        return 'Puzzle started! Use "cat <filename>" to read files and "solve <answer>" to submit your answer.';
+    private startPuzzle(): string {
+        if (this.activatePuzzle) {
+            return 'A puzzle is already active! Use "solve <answer>" to submit your answer.';
+        }
+        
+        loadReadPuzzle().then(puzzle => {
+            this.activatePuzzle = puzzle;
+            this.displayPuzzleBox(puzzle.description);
+        }).catch(error => {
+            console.error('Failed to load puzzle:', error);
+        });
+        
+        return 'Loading puzzle...\nPlease wait...';
     }
     
     private displayPuzzleBox(question: string): void {
@@ -91,7 +114,14 @@ class TerminalApp {
             <div class="puzzle-question">${question}</div>
             <div class="puzzle-hint">Use: solve &lt;answer&gt;</div>
         `;
-        this.terminalContent.appendChild(puzzleBox);
+        
+        const lastLine = this.terminalContent.querySelector('.terminal-line:last-child');
+        if (lastLine) {
+            this.terminalContent.insertBefore(puzzleBox, lastLine);
+        } else {
+            this.terminalContent.appendChild(puzzleBox);
+        }
+        
         this.scrollToBottom();
         
         this.loadPuzzleTitle(puzzleBox);
@@ -102,7 +132,7 @@ class TerminalApp {
         if (!titleElement) return;
         
         try {
-            const response = await fetch('../../assets/txt/math-puzzle.txt');
+            const response = await fetch(`file://${process.cwd()}/assets/txt/math-puzzle.txt`);
             const asciiArt = await response.text();
             titleElement.textContent = asciiArt;
         } catch (error) {
@@ -117,26 +147,22 @@ class TerminalApp {
         }
         
         if (args.length === 0) {
-            return 'Usage: solve <answer>\nExample: solve 42';
+            return 'Usage: solve <answer>\nExample: solve FIT3146SECRET';
         }
         
         const userAnswer = args.join(' ');
+        const correctAnswer = this.activatePuzzle.solution.join('');
         
-        if (isNaN(userAnswer)) {
-            return 'Please provide a valid number.\nUsage: solve <answer>';
-        }
-        
-        if (userAnswer === this.mathPuzzle.answer) {
+        if (userAnswer.toUpperCase() === correctAnswer.toUpperCase()) {
             this.puzzleSolved = true;
-            this.mathPuzzle = null;
+            const solvedPuzzle = this.activatePuzzle;
+            this.activatePuzzle = null;
             setTimeout(() => {
                 window.location.href = '../page2/index.html';
             }, 1500);
             return '✓ Correct! Well done!\nRedirecting to next page...';
         } else {
-            const correctAnswer = this.mathPuzzle.answer;
-            this.mathPuzzle = null;
-            return `✗ Wrong! The answer was ${correctAnswer}.\nType "puzzle" to try again!`;
+            return `✗ Wrong! Try reading all the clue files carefully.\nHint: Combine the parts you find in the correct order.`;
         }
     }
 
