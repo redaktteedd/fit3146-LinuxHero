@@ -3,39 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electron App</title>
+    <title>Terminal App</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Welcome to Electron</h1>
-            <p>A simple browser window application</p>
-        </header>
-        
-        <main>
-            <div class="card">
-                <h2>Getting Started</h2>
-                <p>This is a simple Electron application with a clean, modern interface.</p>
-                <button id="clickBtn" class="btn">Click Me!</button>
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="terminal-buttons">
+                <span class="btn close"></span>
+                <span class="btn minimize"></span>
+                <span class="btn maximize"></span>
             </div>
-            
-            <div class="card">
-                <h2>Features</h2>
-                <ul>
-                    <li>Modern UI design</li>
-                    <li>Responsive layout</li>
-                    <li>Interactive elements</li>
-                    <li>Cross-platform compatibility</li>
-                </ul>
+            <div class="terminal-title">Terminal</div>
+        </div>
+        <div class="terminal-body">
+            <div class="terminal-content">
+                <div class="terminal-line">
+                    <span class="prompt">user@computer:~$</span>
+                    <span class="command">echo "Welcome to Terminal App"</span>
+                </div>
+                <div class="terminal-output">Welcome to Terminal App</div>
+                <div class="terminal-line">
+                    <span class="prompt">user@computer:~$</span>
+                    <span class="command">ls -la</span>
+                </div>
+                <div class="terminal-output">
+                    total 8<br>
+                    drwxr-xr-x  2 user user 4096 Jan  1 12:00 .<br>
+                    drwxr-xr-x  3 user user 4096 Jan  1 12:00 ..<br>
+                    -rw-r--r--  1 user user  220 Jan  1 12:00 .bashrc<br>
+                    -rw-r--r--  1 user user 3526 Jan  1 12:00 .bash_history
+                </div>
+                <div class="terminal-line">
+                    <span class="prompt">user@computer:~$</span>
+                    <span class="cursor">_</span>
+                </div>
             </div>
-        </main>
-        
-        <footer>
-            <p>&copy; 2024 Electron App. Built with ❤️</p>
-        </footer>
+        </div>
     </div>
-    
     <script src="renderer.js"></script>
 </body>
 </html>

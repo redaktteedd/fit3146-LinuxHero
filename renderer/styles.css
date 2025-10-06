@@ -1,4 +1,3 @@
-/* Reset and base styles */
 * {
     margin: 0;
     padding: 0;
@@ -6,144 +5,136 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
+    background-color: #1e1e1e;
+    color: #ffffff;
+    height: 100vh;
+    font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    overflow: hidden;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    min-height: 100vh;
+.terminal {
+    width: 100%;
+    height: 100vh;
+    background-color: #000000;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
 }
 
-/* Header styles */
-header {
-    text-align: center;
-    margin-bottom: 40px;
-    color: white;
+.terminal-header {
+    background-color: #2d2d2d;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid #404040;
 }
 
-header h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+.terminal-buttons {
+    display: flex;
+    gap: 8px;
 }
 
-header p {
-    font-size: 1.2rem;
-    opacity: 0.9;
+.terminal-buttons .btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
-/* Main content */
-main {
+.terminal-buttons .close {
+    background-color: #ff5f56;
+}
+
+.terminal-buttons .minimize {
+    background-color: #ffbd2e;
+}
+
+.terminal-buttons .maximize {
+    background-color: #27ca3f;
+}
+
+.terminal-title {
     flex: 1;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin-bottom: 40px;
+    text-align: center;
+    font-size: 12px;
+    color: #cccccc;
+    font-weight: normal;
 }
 
-/* Card styles */
-.card {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.terminal-body {
+    flex: 1;
+    padding: 20px;
+    background-color: #000000;
+    overflow-y: auto;
+    border-radius: 0 0 8px 8px;
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+.terminal-content {
+    font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
-.card h2 {
-    color: #4a5568;
-    margin-bottom: 15px;
-    font-size: 1.5rem;
+.terminal-line {
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
 }
 
-.card p {
-    color: #666;
-    margin-bottom: 20px;
+.prompt {
+    color: #00ff00;
+    font-weight: bold;
+    margin-right: 8px;
+    user-select: none;
 }
 
-.card ul {
-    list-style: none;
-    padding-left: 0;
+.command {
+    color: #ffffff;
+    font-family: inherit;
 }
 
-.card li {
-    padding: 8px 0;
-    color: #666;
-    position: relative;
-    padding-left: 25px;
+.terminal-output {
+    color: #cccccc;
+    margin-left: 0;
+    margin-bottom: 8px;
+    white-space: pre-line;
+    font-family: inherit;
 }
 
-.card li:before {
-    content: "✓";
-    position: absolute;
-    left: 0;
-    color: #48bb78;
+.cursor {
+    color: #00ff00;
+    animation: blink 1s infinite;
     font-weight: bold;
 }
 
-/* Button styles */
-.btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 25px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+@keyframes blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0;
+    }
 }
 
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+/* Scrollbar styling */
+.terminal-body::-webkit-scrollbar {
+    width: 8px;
 }
 
-.btn:active {
-    transform: translateY(0);
+.terminal-body::-webkit-scrollbar-track {
+    background: #1e1e1e;
 }
 
-/* Footer */
-footer {
-    text-align: center;
-    color: white;
-    opacity: 0.8;
-    font-size: 0.9rem;
+.terminal-body::-webkit-scrollbar-thumb {
+    background: #404040;
+    border-radius: 4px;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-    .container {
-        padding: 15px;
-    }
-    
-    header h1 {
-        font-size: 2rem;
-    }
-    
-    main {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .card {
-        padding: 20px;
-    }
+.terminal-body::-webkit-scrollbar-thumb:hover {
+    background: #555555;
 }
