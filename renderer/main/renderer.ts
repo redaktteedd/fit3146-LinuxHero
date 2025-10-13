@@ -10,7 +10,7 @@ interface TerminalCommands {
 }
 
 export class TerminalApp {
-    private terminalContent: HTMLElement | null;
+    public terminalContent: HTMLElement | null;
     private terminalBody: HTMLElement | null;
     private currentInput: string = '';
     private commandHistory: string[] = [];
@@ -62,7 +62,7 @@ export class TerminalApp {
         puzzle: () => this.startPuzzle(),
         rpg: () => this.startRPG(),
         commandrace: () => this.startCommandRace(),
-        quit: () => this.quitPuzzle(),
+        quit: () => this.handleQuit(),
         solve: (args: string[]) => this.solvePuzzle(args),
         notes: () => this.listNotes(),
         note: (args: string[]) => this.editNote(args),
@@ -80,10 +80,11 @@ export class TerminalApp {
             console.error('Terminal elements not found');
             return;
         }
-        // Show welcome message
-        this.showWelcomeMessage();
+        // Don't show welcome message immediately - wait for start menu selection
+        // this.showWelcomeMessage();
         
-        this.terminalBody.tabIndex = 0;
+        // Remove tabIndex to prevent Tab key interference
+        // this.terminalBody.tabIndex = 0;
         this.terminalBody.style.outline = 'none';
         
         // Optimized event handling for Orange Pi
@@ -95,6 +96,11 @@ export class TerminalApp {
             this.terminalBody?.focus();
         
         document.title = 'Linux App - Ready!';
+    }
+
+    public initTerminal(): void {
+        // Show welcome message when terminal is selected from start menu
+        this.showWelcomeMessage();
     }
 
     private showWelcomeMessage(): void {
@@ -112,12 +118,8 @@ export class TerminalApp {
         this.addOutput('Quick Start Commands:');
         this.addOutput('  help        - Show all available commands');
         this.addOutput('  play        - Show Terminal Challenge menu');
-        this.addOutput('  puzzle      - Start a Linux puzzle game');
-        this.addOutput('  rpg         - Play Terminal RPG adventure');
-        this.addOutput('  commandrace - Race to type commands fast');
         this.addOutput('  notes       - View your saved notes');
         this.addOutput('');
-        this.addOutput('💡 Tip: Use Tab ↹ to switch between sections');
         this.addOutput('');
         this.addOutput('Ready to start your Linux journey? Type any command!');
         this.addOutput('');
@@ -133,13 +135,15 @@ export class TerminalApp {
         }
         
         this.addOutput('╔══════════════════════════════════════════════════════════════╗');
-        this.addOutput('║                    Welcome to the Terminal Challenge! ║');
+        this.addOutput('║                 Welcome to the Terminal Challenge!           ║');
         this.addOutput('╚══════════════════════════════════════════════════════════════╝');
         this.addOutput('');
-        this.addOutput('Ready to test your skills? Type \'puzzle\' to start puzzle game!');
+        this.addOutput('Ready to test your skills?');
+        this.addOutput('Type \'puzzle\' to start terminal puzzle game!');
         this.addOutput('Type \'rpg\' to start terminal rpg game!');
         this.addOutput('Type \'commandrace\' to start terminal command race game!');
         this.addOutput('Type \'help\' for available commands.');
+        this.addOutput('Type \'quit\' to go back.');
         this.addOutput('');
         
         return '';
@@ -244,6 +248,29 @@ export class TerminalApp {
         this.addOutput('Type "puzzle" to start a new puzzle game.');
         
         return '';
+    }
+
+    private quitToWelcome(): string {
+        // Clear the terminal
+        if (this.terminalContent) {
+            this.terminalContent.innerHTML = '';
+        }
+        
+        // Show welcome message
+        this.showWelcomeMessage();
+        
+        return '';
+    }
+
+    private handleQuit(): string {
+        // Check if we're in Terminal Challenge mode (no puzzle active)
+        if (!this.activatePuzzle) {
+            // Return to welcome message
+            return this.quitToWelcome();
+        } else {
+            // Quit puzzle game
+            return this.quitPuzzle();
+        }
     }
 
     private listNotes(): string {
@@ -660,9 +687,12 @@ export class TerminalApp {
             return; // Let other keys pass through naturally
         }
         
-        // Allow Tab key for navigation
+        // Tab key highlights sections
         if (e.key === 'Tab') {
-            return; // Let Tab key work for navigation
+            console.log('Tab key detected!');
+            e.preventDefault();
+            this.highlightNextSection();
+            return;
         }
         
         // Always prevent default behavior to avoid browser interference
@@ -692,8 +722,14 @@ export class TerminalApp {
                 this.historyIndex = this.commandHistory.length;
             }
             
+            // Extract command to check if it's quit
+            const command = this.currentInput.trim().split(' ')[0]?.toLowerCase() ?? '';
             this.currentInput = '';
-            this.addPrompt();
+            
+            // Don't add prompt for quit command as it handles its own display
+            if (command !== 'quit') {
+                this.addPrompt();
+            }
             
         } else if (e.key === 'Backspace') {
             if (this.currentInput.length > 0) {
@@ -737,10 +773,119 @@ export class TerminalApp {
             this.eventListenerAdded = false;
         }
     }
+
+    private highlightNextSection(): void {
+        console.log('Tab key pressed - highlighting sections');
+        
+        // Remove existing highlights
+        const existingHighlights = document.querySelectorAll('.terminal-highlight');
+        console.log('Found existing highlights:', existingHighlights.length);
+        existingHighlights.forEach(el => {
+            el.classList.remove('terminal-highlight');
+        });
+
+        // Find all terminal lines with content
+        const terminalLines = document.querySelectorAll('.terminal-line');
+        console.log('Total terminal lines:', terminalLines.length);
+        
+        const linesWithContent = Array.from(terminalLines).filter(line => {
+            const command = line.querySelector('.command');
+            const hasContent = command && command.textContent && command.textContent.trim().length > 0;
+            console.log('Line has content:', hasContent, command?.textContent);
+            return hasContent;
+        });
+
+        console.log('Lines with content:', linesWithContent.length);
+
+        if (linesWithContent.length === 0) {
+            console.log('No lines with content found');
+            return;
+        }
+
+        // Find the next line to highlight (cycle through them)
+        let nextIndex = 0;
+        const currentHighlighted = document.querySelector('.terminal-highlight');
+        if (currentHighlighted) {
+            const currentIndex = linesWithContent.indexOf(currentHighlighted);
+            nextIndex = (currentIndex + 1) % linesWithContent.length;
+            console.log('Current highlighted index:', currentIndex, 'Next index:', nextIndex);
+        } else {
+            console.log('No current highlight, starting from index 0');
+        }
+
+        // Highlight the next section
+        const nextLine = linesWithContent[nextIndex];
+        if (nextLine) {
+            console.log('Highlighting line:', nextLine);
+            nextLine.classList.add('terminal-highlight');
+            
+            // Scroll to the highlighted section
+            nextLine.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            console.log('No next line to highlight');
+        }
+    }
 }
 
 // Global instance to prevent multiple instances
 let globalTerminalApp: TerminalApp | null = null;
+
+// Make Learn section functions globally accessible
+(window as any).openModule = openModule;
+(window as any).closeModule = closeModule;
+(window as any).checkAnswer = checkAnswer;
+
+// Start menu functionality
+function selectStartOption(option: string): void {
+    // Hide start menu
+    const startMenu = document.getElementById('start-menu');
+    if (startMenu) {
+        startMenu.style.display = 'none';
+    }
+    
+    // Show tab navigation
+    const tabNav = document.getElementById('tab-nav');
+    if (tabNav) {
+        tabNav.style.display = 'flex';
+    }
+    
+    // Switch to selected tab
+    const tabButton = document.querySelector(`[data-tab="${option}"]`) as HTMLElement;
+    if (tabButton) {
+        tabButton.click();
+    }
+    
+    // Initialize terminal if terminal option was selected
+    if (option === 'terminal' && globalTerminalApp) {
+        globalTerminalApp.initTerminal();
+    }
+}
+
+// Make start menu function globally accessible
+(window as any).selectStartOption = selectStartOption;
+
+// Go back to menu functionality
+function goBackToMenu(): void {
+    // Hide tab navigation
+    const tabNav = document.getElementById('tab-nav');
+    if (tabNav) {
+        tabNav.style.display = 'none';
+    }
+    
+    // Show start menu
+    const startMenu = document.getElementById('start-menu');
+    if (startMenu) {
+        startMenu.style.display = 'flex';
+    }
+    
+    // Clear terminal content if terminal is active
+    if (globalTerminalApp && globalTerminalApp.terminalContent) {
+        globalTerminalApp.terminalContent.innerHTML = '';
+    }
+}
+
+// Make go back to menu function globally accessible
+(window as any).goBackToMenu = goBackToMenu;
 
 // Tab switching functionality
 function initializeTabs(): void {
@@ -859,6 +1004,9 @@ function renderNotesList(): void {
     
     notesList.innerHTML = notes.map(note => `
         <div class="note-item" data-note-id="${note.id}" onclick="selectNote('${note.id}')">
+            <button class="note-delete-btn" onclick="event.stopPropagation(); deleteNote('${note.id}')" title="Delete note">
+                🗑️
+            </button>
             <div class="note-title">${note.title}</div>
             <div class="note-preview">${note.content.substring(0, 100)}${note.content.length > 100 ? '...' : ''}</div>
             <div class="note-date">${note.updatedAt.toLocaleDateString()}</div>
