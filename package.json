@@ -8,9 +8,11 @@
   "main": "dist/main.js",
   "scripts": {
     "start": "electron .",
-    "dev": "NODE_ENV=development electron .",
+    "dev": "cross-env NODE_ENV=development electron .",
+    "dev:win": "set NODE_ENV=development && electron .",
+    "dev:unix": "NODE_ENV=development electron .",
     "build": "tsc -p tsconfig.main.json && tsc -p tsconfig.renderer.json",
-    "watch": "tsc -p tsconfig.main.json --watch & tsc -p tsconfig.renderer.json --watch",
+    "watch": "concurrently \"tsc -p tsconfig.main.json --watch\" \"tsc -p tsconfig.renderer.json --watch\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
@@ -18,6 +20,8 @@
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^24.6.2",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
     "electron": "^38.2.1",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
