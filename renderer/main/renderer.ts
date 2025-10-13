@@ -285,6 +285,7 @@ export class TerminalApp {
             };
             notes.unshift(note);
             saveNotes();
+            renderNotesList(); // Update GUI Notes tab
         }
 
         // Start terminal-based note editing
@@ -311,6 +312,7 @@ export class TerminalApp {
         
         notes.splice(noteIndex, 1);
         saveNotes();
+        renderNotesList(); // Update GUI Notes tab
         
         return `Note "${note.title}" deleted successfully.`;
     }
@@ -347,6 +349,7 @@ export class TerminalApp {
                 note.content = content;
                 note.updatedAt = new Date();
                 saveNotes();
+                renderNotesList(); // Update GUI Notes tab
                 
                 // Exit note editing mode
                 (window as any).noteEditMode = false;
@@ -562,7 +565,8 @@ export class TerminalApp {
                 this.addPrompt();
             } else {
                 // Capture typed characters for RPG mode
-                if (e.key.length === 1) {
+                if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                    // Handle all printable characters (letters, numbers, symbols, spaces)
                     this.currentInput += e.key;
                     this.updateCurrentLine();
                 } else if (e.key === 'Backspace') {
@@ -604,7 +608,8 @@ export class TerminalApp {
                 }
             } else {
                 // Capture typed characters for Command Race mode
-                if (e.key.length === 1) {
+                if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                    // Handle all printable characters (letters, numbers, symbols, spaces)
                     this.currentInput += e.key;
                     this.updateCurrentLine();
                 } else if (e.key === 'Backspace') {
@@ -641,7 +646,8 @@ export class TerminalApp {
                 this.addPrompt();
             } else {
                 // Capture typed characters for note editing mode
-                if (e.key.length === 1) {
+                if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                    // Handle all printable characters (letters, numbers, symbols, spaces)
                     this.currentInput += e.key;
                     this.updateCurrentLine();
                 } else if (e.key === 'Backspace') {
@@ -652,6 +658,11 @@ export class TerminalApp {
                 }
             }
             return; // Let other keys pass through naturally
+        }
+        
+        // Allow Tab key for navigation
+        if (e.key === 'Tab') {
+            return; // Let Tab key work for navigation
         }
         
         // Always prevent default behavior to avoid browser interference
@@ -705,7 +716,9 @@ export class TerminalApp {
                 this.currentInput = '';
                 this.updateCurrentLine();
             }
-        } else if (e.key.length === 1) {
+        } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            // Handle all printable characters (letters, numbers, symbols, spaces)
+            // Exclude control key combinations
             this.currentInput += e.key;
             this.updateCurrentLine();
         }

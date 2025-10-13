@@ -676,9 +676,11 @@ body {
 }
 
 .terminal-content {
-    font-family: monospace;
+    font-family: 'Courier New', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-feature-settings: normal;
+    font-variant-ligatures: none;
+    line-height: 1.4;
     font-size: 14px;
-    line-height: 1.6;
 }
 
 .terminal-line {
@@ -696,8 +698,10 @@ body {
 
 .command {
     color: #ffffff;
-    font-family: inherit;
+    font-family: 'Courier New', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
     white-space: pre;
+    font-feature-settings: normal;
+    font-variant-ligatures: none;
 }
 
 .terminal-output {
