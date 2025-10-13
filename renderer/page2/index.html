@@ -3,40 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page 2</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background-color: #ffffff;
-            color: #000000;
-            font-family: 'Arial', sans-serif;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        
-        h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            color: #27ca3f;
-        }
-        
-        p {
-            font-size: 24px;
-            color: #333;
-        }
-    </style>
+    <title>Terminal Quest: Software & Package Hunt</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Page 2 - Success!</h1>
-    <p>This is a placeholder for the second page.</p>
+    <div class="header">
+        <h1>Terminal Quest: Software & Package Hunt</h1>
+        <p>Install ubdecode to decrypt the encrypted file and reveal the secret message!</p>
+    </div>
+    
+    <div class="main-container">
+        <div class="software-center">
+            <div class="software-center-header">
+                <span>🛠️</span>
+                <h2>Ubuntu Software Center</h2>
+            </div>
+            
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search for packages..." id="searchInput">
+            </div>
+            
+            <div class="packages-list" id="packagesList">
+                <!-- Packages will be populated by JavaScript -->
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="installBtn" disabled>Install Selected</button>
+                <button class="btn btn-secondary" id="removeBtn" disabled>Remove Selected</button>
+                <button class="btn btn-success" id="updateBtn">Update Package List</button>
+            </div>
+        </div>
+        
+        <div class="terminal-panel">
+            <div class="terminal-header">
+                Terminal - Package Management Commands
+            </div>
+            <div class="terminal-content" id="terminalContent">
+            </div>
+        </div>
+    </div>
+    
+    <div class="overlay" id="overlay"></div>
+    <div class="message-reveal" id="messageReveal">
+        <h3>🎉 Puzzle Solved!</h3>
+        <p id="secretMessage">Secret message will appear here...</p>
+        <button class="btn btn-primary" onclick="closeMessage()">Continue</button>
+    </div>
+    
+    <script type="module" src="../../dist/renderer/page2/package-hunt.js"></script>
 </body>
 </html>
