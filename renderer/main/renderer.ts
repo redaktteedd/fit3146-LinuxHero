@@ -128,7 +128,7 @@ export class TerminalApp {
         this.addPrompt();
     }
 
-    private showTerminalChallenge(): string {
+    public showTerminalChallenge(): string {
         // Clear the terminal first
         if (this.terminalContent) {
             this.terminalContent.innerHTML = '';
@@ -244,10 +244,10 @@ export class TerminalApp {
         const puzzleBoxes = this.terminalContent?.querySelectorAll('.puzzle-box');
         puzzleBoxes?.forEach(box => box.remove());
         
-        this.addOutput('Puzzle game ended. You can now use normal terminal commands.');
-        this.addOutput('Type "puzzle" to start a new puzzle game.');
+        this.addOutput('Puzzle game ended. Returning to Terminal Challenge...');
         
-        return '';
+        // Return to Terminal Challenge
+        return this.showTerminalChallenge();
     }
 
     private quitToWelcome(): string {
@@ -263,14 +263,29 @@ export class TerminalApp {
     }
 
     private handleQuit(): string {
-        // Check if we're in Terminal Challenge mode (no puzzle active)
-        if (!this.activatePuzzle) {
-            // Return to welcome message
-            return this.quitToWelcome();
+        // Check if we're in any game mode
+        if (this.activatePuzzle || (window as any).rpgMode || (window as any).commandRaceMode) {
+            // Quit from game - return to Terminal Challenge
+            return this.quitToTerminalChallenge();
         } else {
-            // Quit puzzle game
-            return this.quitPuzzle();
+            // Not in game mode - return to welcome message
+            return this.quitToWelcome();
         }
+    }
+
+    private quitToTerminalChallenge(): string {
+        // Clear any active game states
+        this.activatePuzzle = null;
+        (window as any).rpgMode = false;
+        (window as any).commandRaceMode = false;
+        
+        // Clear the terminal
+        if (this.terminalContent) {
+            this.terminalContent.innerHTML = '';
+        }
+        
+        // Show Terminal Challenge
+        return this.showTerminalChallenge();
     }
 
     private listNotes(): string {
@@ -722,12 +737,12 @@ export class TerminalApp {
                 this.historyIndex = this.commandHistory.length;
             }
             
-            // Extract command to check if it's quit
+            // Extract command to check if it's quit or commandrace
             const command = this.currentInput.trim().split(' ')[0]?.toLowerCase() ?? '';
             this.currentInput = '';
             
-            // Don't add prompt for quit command as it handles its own display
-            if (command !== 'quit') {
+            // Don't add prompt for quit or commandrace commands as they handle their own display
+            if (command !== 'quit' && command !== 'commandrace') {
                 this.addPrompt();
             }
             
@@ -1286,21 +1301,102 @@ let commandRaceCurrentText = '';
 let commandRaceState = 'waiting'; // 'waiting', 'countdown', 'racing', 'finished'
 let commandRaceCountdownTimer: ReturnType<typeof setTimeout> | null = null;
 let commandRaceTexts = [
+    // Basic file operations
     'ls -la',
     'cd /home/user',
     'mkdir projects',
     'cp file.txt backup.txt',
     'mv old.txt new.txt',
+    'rm -rf temp_folder',
+    'touch newfile.txt',
+    'cat /etc/passwd',
+    'head -n 10 file.txt',
+    'tail -f /var/log/syslog',
+    
+    // Text processing
+    'grep "error" *.log',
     'find . -name "*.txt"',
-    'grep "hello" file.txt',
-    'chmod 755 script.sh',
+    'sed "s/old/new/g" file.txt',
+    'awk "{print $1}" data.txt',
+    'sort -r file.txt',
+    'uniq -c file.txt',
+    'wc -l file.txt',
+    'cut -d: -f1 /etc/passwd',
+    
+    // System administration
     'ps aux | grep python',
-    'tar -czf archive.tar.gz folder/',
+    'top -n 1',
+    'df -h',
+    'free -m',
+    'uptime',
+    'whoami',
+    'id',
+    'groups',
+    'sudo systemctl status nginx',
+    'sudo apt update && sudo apt upgrade',
+    'sudo chmod 755 script.sh',
+    'sudo chown user:group file.txt',
+    
+    // Network and remote operations
     'ssh user@server.com',
+    'scp file.txt user@server:/path/',
+    'wget https://example.com/file.zip',
+    'curl -O https://api.example.com/data',
+    'ping -c 4 google.com',
+    'netstat -tulpn',
+    'ss -tulpn',
+    'iptables -L',
+    
+    // Version control and development
     'git commit -m "initial commit"',
+    'git push origin main',
+    'git pull origin develop',
+    'git checkout -b feature/new-feature',
+    'git merge feature/branch',
+    'git log --oneline',
+    'git status',
+    'git diff HEAD~1',
+    
+    // Container and virtualization
     'docker run -it ubuntu',
-    'sudo apt update',
-    'systemctl status nginx'
+    'docker ps -a',
+    'docker images',
+    'docker build -t myapp .',
+    'docker-compose up -d',
+    'kubectl get pods',
+    'kubectl logs pod-name',
+    
+    // Archive and compression
+    'tar -czf archive.tar.gz folder/',
+    'tar -xzf archive.tar.gz',
+    'zip -r backup.zip folder/',
+    'unzip archive.zip',
+    'gzip file.txt',
+    'gunzip file.txt.gz',
+    
+    // Process management
+    'kill -9 1234',
+    'killall firefox',
+    'nohup command &',
+    'jobs',
+    'fg %1',
+    'bg %1',
+    
+    // Environment and configuration
+    'export PATH=$PATH:/usr/local/bin',
+    'echo $HOME',
+    'env | grep PATH',
+    'source ~/.bashrc',
+    'alias ll="ls -la"',
+    'history | grep command',
+    
+    // Advanced text manipulation
+    'tr "[:lower:]" "[:upper:]" < file.txt',
+    'paste file1.txt file2.txt',
+    'join file1.txt file2.txt',
+    'comm file1.txt file2.txt',
+    'diff file1.txt file2.txt',
+    'patch file.txt patch.diff'
 ];
 
 // Make modes globally accessible
@@ -1396,7 +1492,13 @@ function processRpgCommand(command: string): void {
             rpgMode = false;
             (window as any).rpgMode = false;
             globalTerminalApp.addOutput('Thanks for playing Terminal RPG!');
-            globalTerminalApp.addOutput('RPG mode disabled. You can now use normal terminal commands.');
+            globalTerminalApp.addOutput('Returning to Terminal Challenge...');
+            
+            // Clear terminal and show Terminal Challenge
+            if (globalTerminalApp.terminalContent) {
+                globalTerminalApp.terminalContent.innerHTML = '';
+            }
+            globalTerminalApp.showTerminalChallenge();
             break;
             
         default:
@@ -1444,7 +1546,13 @@ function processCommandRaceCommand(command: string): void {
         (window as any).commandRaceMode = false;
         commandRaceState = 'waiting';
         globalTerminalApp.addOutput('Thanks for playing Command Race!');
-        globalTerminalApp.addOutput('Command Race mode disabled. You can now use normal terminal commands.');
+        globalTerminalApp.addOutput('Returning to Terminal Challenge...');
+        
+        // Clear terminal and show Terminal Challenge
+        if (globalTerminalApp.terminalContent) {
+            globalTerminalApp.terminalContent.innerHTML = '';
+        }
+        globalTerminalApp.showTerminalChallenge();
         return;
     }
     
