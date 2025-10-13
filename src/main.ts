@@ -7,8 +7,8 @@ let mainWindow: BrowserWindow | null = null;
 function createWindow(): void {
   // Create the browser window with Orange Pi optimizations
   mainWindow = new BrowserWindow({
-    width: 1024,  // Reduced from 1200 for better performance
-    height: 768, // Reduced from 800 for better performance
+    width: 1280,  // 720p width
+    height: 720,  // 720p height
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
