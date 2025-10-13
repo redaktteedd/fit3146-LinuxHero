@@ -5,6 +5,27 @@
     box-sizing: border-box;
 }
 
+/* Performance optimizations for Orange Pi */
+html, body {
+    /* Disable hardware acceleration for better stability */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    /* Optimize font rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeSpeed;
+    /* Reduce repaints */
+    will-change: auto;
+}
+
+/* Disable animations and transitions for better performance */
+*, *::before, *::after {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+}
+
 /* Start Menu */
 .start-menu {
     position: fixed;

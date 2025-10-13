@@ -21,11 +21,13 @@ export class TerminalApp {
     private activatePuzzle: Puzzle | null = null;
     
     private commands: TerminalCommands = {
-        help: () => 'Available commands:\n  help - Show this help message\n  clear - Clear the terminal\n  echo <text> - Echo text\n  date - Show current date\n  whoami - Show current user\n  ls - List files\n  pwd - Show current directory\n  cat <filename> - Read a file\n  play - Show Terminal Challenge menu\n  puzzle - Start a puzzle\n  solve <answer> - Submit your puzzle answer\n  rpg - Start a RPG game\n  commandrace - Start a command race game\n  notes - List all notes\n  note <title> - Create or edit a note\n  rmnote <title> - Delete a note\n\nShell shortcuts:\n  Ctrl+A - Move to beginning of line\n  Ctrl+E - Move to end of line\n  Ctrl+K - Delete to end of line\n  Ctrl+U - Delete to beginning of line\n  Ctrl+W - Delete previous word\n  Ctrl+C - Interrupt command\n  Ctrl+D - Exit (on empty line)\n  Ctrl+L - Clear screen\n  Ctrl+R - Reverse search history\n  Ctrl+T - Transpose characters',
+        help: () => 'Available commands:\n  help - Show this help message\n  clear - Clear the terminal\n  echo <text> - Echo text\n  date - Show current date\n  whoami - Show current user\n  ls - List files\n  pwd - Show current directory\n  cat <filename> - Read a file\n  play - Show Terminal Challenge menu\n  puzzle - Start a puzzle\n  solve <answer> - Submit your puzzle answer\n  rpg - Start a RPG game\n  commandrace - Start a command race game\n  notes - List all notes\n  note <title> - Create or edit a note\n  rmnote <title> - Delete a note\n\nFile Operations:\n  mkdir <dir> - Create directory\n  rmdir <dir> - Remove directory\n  cp <src> <dest> - Copy file\n  mv <src> <dest> - Move/rename file\n  rm <file> - Remove file\n  touch <file> - Create empty file\n  chmod <perms> <file> - Change permissions\n  chown <user:group> <file> - Change ownership\n\nSystem Information:\n  ps - Show running processes\n  top - Show system processes\n  df - Show disk usage\n  free - Show memory usage\n  uptime - Show system uptime\n  id - Show user ID\n  groups - Show user groups\n  env - Show environment variables\n  history - Show command history\n  which <cmd> - Find command location\n  whereis <cmd> - Find command files\n\nText Processing:\n  grep <pattern> <file> - Search text\n  find <path> -name <pattern> - Find files\n  head <file> - Show first lines\n  tail <file> - Show last lines\n  wc <file> - Count lines/words/chars\n  sort <file> - Sort lines\n  uniq <file> - Remove duplicates\n  cut -d: -f1 <file> - Extract columns\n\nCopy/Paste:\n  copy <text> - Copy text to clipboard\n  paste - Paste from clipboard\n  clipboard - Show clipboard contents\n\nLearning Resources:\n  learn - Show all learning commands\n  tutorial <topic> - Interactive tutorials\n  examples <cmd> - Command examples\n  cheatsheet <cat> - Quick reference\n  man <cmd> - Manual pages\n\nShell shortcuts:\n  Ctrl+A - Move to beginning of line\n  Ctrl+E - Move to end of line\n  Ctrl+K - Delete to end of line\n  Ctrl+U - Delete to beginning of line\n  Ctrl+W - Delete previous word\n  Ctrl+C - Interrupt command\n  Ctrl+D - Exit (on empty line)\n  Ctrl+L - Clear screen\n  Ctrl+R - Reverse search history\n  Ctrl+T - Transpose characters',
         clear: () => {
             if (this.terminalContent) {
                 this.terminalContent.innerHTML = '';
             }
+            // Add a prompt after clearing
+            this.addPrompt();
             return '';
         },
         cat: (args: string[]) => {
@@ -67,7 +69,650 @@ export class TerminalApp {
         notes: () => this.listNotes(),
         note: (args: string[]) => this.editNote(args),
         rmnote: (args: string[]) => this.deleteNoteTerminal(args),
-        play: () => this.showTerminalChallenge()
+        play: () => this.showTerminalChallenge(),
+        
+        // Additional Linux commands
+        mkdir: (args: string[]) => {
+            if (args.length === 0) {
+                return 'mkdir: missing operand\nTry "mkdir <directory_name>"';
+            }
+            return `Directory '${args[0]}' created successfully`;
+        },
+        
+        rmdir: (args: string[]) => {
+            if (args.length === 0) {
+                return 'rmdir: missing operand\nTry "rmdir <directory_name>"';
+            }
+            return `Directory '${args[0]}' removed successfully`;
+        },
+        
+        cp: (args: string[]) => {
+            if (args.length < 2) {
+                return 'cp: missing file operand\nTry "cp <source> <destination>"';
+            }
+            return `Copied '${args[0]}' to '${args[1]}'`;
+        },
+        
+        mv: (args: string[]) => {
+            if (args.length < 2) {
+                return 'mv: missing file operand\nTry "mv <source> <destination>"';
+            }
+            return `Moved '${args[0]}' to '${args[1]}'`;
+        },
+        
+        rm: (args: string[]) => {
+            if (args.length === 0) {
+                return 'rm: missing operand\nTry "rm <filename>"';
+            }
+            return `File '${args[0]}' removed successfully`;
+        },
+        
+        touch: (args: string[]) => {
+            if (args.length === 0) {
+                return 'touch: missing file operand\nTry "touch <filename>"';
+            }
+            return `File '${args[0]}' created successfully`;
+        },
+        
+        chmod: (args: string[]) => {
+            if (args.length < 2) {
+                return 'chmod: missing operand\nTry "chmod <permissions> <filename>"';
+            }
+            return `Changed permissions of '${args[1]}' to ${args[0]}`;
+        },
+        
+        chown: (args: string[]) => {
+            if (args.length < 2) {
+                return 'chown: missing operand\nTry "chown <user:group> <filename>"';
+            }
+            return `Changed ownership of '${args[1]}' to ${args[0]}`;
+        },
+        
+        ps: () => 'PID TTY TIME CMD\n1234 pts/0 00:00:01 bash\n5678 pts/0 00:00:02 node\n9012 pts/0 00:00:01 npm',
+        
+        top: () => 'top - 14:30:15 up 2 days, 3:45, 2 users, load average: 0.15, 0.10, 0.05\nTasks: 156 total, 1 running, 155 sleeping\n%Cpu(s): 2.1 us, 0.8 sy, 0.0 ni, 96.9 id, 0.2 wa',
+        
+        df: () => 'Filesystem 1K-blocks Used Available Use% Mounted on\n/dev/sda1 2097152 1048576 1048576 50% /\n/dev/sda2 4194304 2097152 2097152 50% /home',
+        
+        free: () => 'total used free shared buff/cache available\nMem: 8388608 4194304 2097152 1048576 2097152 3145728\nSwap: 2097152 0 2097152',
+        
+        uptime: () => `14:30:15 up 2 days, 3:45, 2 users, load average: 0.15, 0.10, 0.05`,
+        
+        id: () => 'uid=1000(user) gid=1000(user) groups=1000(user),4(adm),24(cdrom),27(sudo)',
+        
+        groups: () => 'user adm cdrom sudo',
+        
+        env: () => 'HOME=/home/user\nPATH=/usr/local/bin:/usr/bin:/bin\nUSER=user\nSHELL=/bin/bash',
+        
+        history: () => '1  ls -la\n2  cd /home/user\n3  mkdir projects\n4  cd projects\n5  touch README.md',
+        
+        which: (args: string[]) => {
+            if (args.length === 0) {
+                return 'which: missing program name\nTry "which <program_name>"';
+            }
+            return `/usr/bin/${args[0]}`;
+        },
+        
+        whereis: (args: string[]) => {
+            if (args.length === 0) {
+                return 'whereis: missing program name\nTry "whereis <program_name>"';
+            }
+            return `${args[0]}: /usr/bin/${args[0]} /usr/share/man/man1/${args[0]}.1.gz`;
+        },
+        
+        grep: (args: string[]) => {
+            if (args.length === 0) {
+                return 'grep: missing pattern\nTry "grep <pattern> <filename>"';
+            }
+            return `Found "${args[0]}" in file.txt:3:This line contains ${args[0]}`;
+        },
+        
+        find: (args: string[]) => {
+            if (args.length === 0) {
+                return 'find: missing path\nTry "find <path> -name <pattern>"';
+            }
+            return './file1.txt\n./file2.txt\n./subdir/file3.txt';
+        },
+        
+        head: (args: string[]) => {
+            if (args.length === 0) {
+                return 'head: missing file operand\nTry "head <filename>"';
+            }
+            return `Line 1: This is the first line\nLine 2: This is the second line\nLine 3: This is the third line`;
+        },
+        
+        tail: (args: string[]) => {
+            if (args.length === 0) {
+                return 'tail: missing file operand\nTry "tail <filename>"';
+            }
+            return `Line 8: This is the eighth line\nLine 9: This is the ninth line\nLine 10: This is the tenth line`;
+        },
+        
+        wc: (args: string[]) => {
+            if (args.length === 0) {
+                return 'wc: missing file operand\nTry "wc <filename>"';
+            }
+            return '10 25 150 file.txt';
+        },
+        
+        sort: (args: string[]) => {
+            if (args.length === 0) {
+                return 'sort: missing file operand\nTry "sort <filename>"';
+            }
+            return `apple\nbanana\ncherry\norange\npear`;
+        },
+        
+        uniq: (args: string[]) => {
+            if (args.length === 0) {
+                return 'uniq: missing file operand\nTry "uniq <filename>"';
+            }
+            return `apple\nbanana\ncherry\norange`;
+        },
+        
+        cut: (args: string[]) => {
+            if (args.length === 0) {
+                return 'cut: missing list\nTry "cut -d: -f1 <filename>"';
+            }
+            return `user1\nuser2\nuser3`;
+        },
+        
+        // Copy/Paste functionality
+        copy: (args: string[]) => {
+            if (args.length === 0) {
+                return 'copy: missing operand\nTry "copy <text>"';
+            }
+            const text = args.join(' ');
+            // Store in clipboard (simulated)
+            (window as any).terminalClipboard = text;
+            return `Copied "${text}" to clipboard`;
+        },
+        
+        paste: () => {
+            const clipboard = (window as any).terminalClipboard;
+            if (clipboard) {
+                return clipboard;
+            } else {
+                return 'Clipboard is empty';
+            }
+        },
+        
+        clipboard: () => {
+            const clipboard = (window as any).terminalClipboard;
+            if (clipboard) {
+                return `Clipboard contains: "${clipboard}"`;
+            } else {
+                return 'Clipboard is empty';
+            }
+        },
+        
+        // Learning Resources
+        tutorial: (args: string[]) => {
+            const topic = args[0]?.toLowerCase() || 'general';
+            switch (topic) {
+                case 'files':
+                    return '📚 FILE MANAGEMENT TUTORIAL\n\n' +
+                           '1. Creating Files:\n   touch filename.txt\n   echo "content" > file.txt\n\n' +
+                           '2. Creating Directories:\n   mkdir directory_name\n   mkdir -p path/to/directory\n\n' +
+                           '3. Listing Files:\n   ls - List files\n   ls -la - List with details\n   ls -lh - Human readable sizes\n\n' +
+                           '4. Moving Files:\n   mv old_name new_name\n   mv file.txt /path/to/destination/\n\n' +
+                           '5. Copying Files:\n   cp source destination\n   cp -r directory/ backup/\n\n' +
+                           '6. Removing Files:\n   rm filename\n   rm -rf directory/\n\n' +
+                           'Try: tutorial permissions, tutorial text, tutorial system';
+                    
+                case 'permissions':
+                    return '🔐 FILE PERMISSIONS TUTORIAL\n\n' +
+                           'Understanding Permissions:\n' +
+                           'rwx rwx rwx\n' +
+                           '│││ │││ │││\n' +
+                           '│││ │││ └─ Others (o)\n' +
+                           '│││ └─── Group (g)\n' +
+                           '└─────── Owner (u)\n\n' +
+                           'r = read (4), w = write (2), x = execute (1)\n\n' +
+                           'Common Commands:\n' +
+                           'chmod 755 file.sh - Owner: rwx, Group/Others: rx\n' +
+                           'chmod u+x file.sh - Add execute for owner\n' +
+                           'chmod g-w file.txt - Remove write for group\n' +
+                           'chmod 644 file.txt - Owner: rw, Group/Others: r\n\n' +
+                           'Try: tutorial files, tutorial text, tutorial system';
+                    
+                case 'text':
+                    return '📝 TEXT PROCESSING TUTORIAL\n\n' +
+                           '1. Viewing Files:\n' +
+                           '   cat file.txt - Display entire file\n' +
+                           '   head -n 10 file.txt - First 10 lines\n' +
+                           '   tail -n 5 file.txt - Last 5 lines\n' +
+                           '   less file.txt - Interactive viewer\n\n' +
+                           '2. Searching Text:\n' +
+                           '   grep "pattern" file.txt - Find lines\n' +
+                           '   grep -i "pattern" file.txt - Case insensitive\n' +
+                           '   grep -r "pattern" directory/ - Recursive search\n\n' +
+                           '3. Text Manipulation:\n' +
+                           '   sort file.txt - Sort lines\n' +
+                           '   uniq file.txt - Remove duplicates\n' +
+                           '   cut -d: -f1 file.txt - Extract first field\n' +
+                           '   wc -l file.txt - Count lines\n\n' +
+                           'Try: tutorial files, tutorial permissions, tutorial system';
+                    
+                case 'system':
+                    return '⚙️ SYSTEM ADMINISTRATION TUTORIAL\n\n' +
+                           '1. Process Management:\n' +
+                           '   ps aux - List all processes\n' +
+                           '   top - Interactive process viewer\n' +
+                           '   htop - Enhanced process viewer\n' +
+                           '   kill 1234 - Kill process by PID\n' +
+                           '   killall firefox - Kill all firefox processes\n' +
+                           '   jobs - List background jobs\n' +
+                           '   fg %1 - Bring job to foreground\n' +
+                           '   bg %1 - Send job to background\n\n' +
+                           '2. System Information:\n' +
+                           '   df -h - Disk usage\n' +
+                           '   free -m - Memory usage\n' +
+                           '   uptime - System uptime\n' +
+                           '   uname -a - System information\n' +
+                           '   lscpu - CPU information\n' +
+                           '   lsblk - Block devices\n' +
+                           '   lspci - PCI devices\n' +
+                           '   lsusb - USB devices\n\n' +
+                           '3. User Management:\n' +
+                           '   whoami - Current user\n' +
+                           '   id - User and group IDs\n' +
+                           '   groups - User groups\n' +
+                           '   sudo command - Run as root\n' +
+                           '   su - Switch user\n' +
+                           '   passwd - Change password\n' +
+                           '   adduser username - Add new user\n\n' +
+                           '4. Service Management:\n' +
+                           '   systemctl status service - Check service status\n' +
+                           '   systemctl start service - Start service\n' +
+                           '   systemctl stop service - Stop service\n' +
+                           '   systemctl restart service - Restart service\n' +
+                           '   systemctl enable service - Enable auto-start\n\n' +
+                           'Try: tutorial files, tutorial permissions, tutorial text, tutorial network';
+                    
+                case 'network':
+                    return '🌐 NETWORK ADMINISTRATION TUTORIAL\n\n' +
+                           '1. Network Information:\n' +
+                           '   ip addr - Show network interfaces\n' +
+                           '   ip route - Show routing table\n' +
+                           '   netstat -tulpn - Show network connections\n' +
+                           '   ss -tulpn - Modern network connections\n' +
+                           '   ifconfig - Network interface configuration\n' +
+                           '   iwconfig - Wireless interface configuration\n\n' +
+                           '2. Connectivity Testing:\n' +
+                           '   ping host - Test connectivity\n' +
+                           '   traceroute host - Trace network path\n' +
+                           '   mtr host - Network diagnostic tool\n' +
+                           '   telnet host port - Test port connectivity\n' +
+                           '   nc -zv host port - Netcat port test\n\n' +
+                           '3. Remote Access:\n' +
+                           '   ssh user@host - Secure shell connection\n' +
+                           '   scp file user@host:/path - Secure copy\n' +
+                           '   rsync -av source/ dest/ - Sync files\n' +
+                           '   wget url - Download files\n' +
+                           '   curl -O url - Download with curl\n\n' +
+                           '4. Network Security:\n' +
+                           '   iptables -L - List firewall rules\n' +
+                           '   ufw status - Ubuntu firewall status\n' +
+                           '   nmap host - Network scanner\n' +
+                           '   tcpdump -i eth0 - Network packet capture\n\n' +
+                           'Try: tutorial files, tutorial permissions, tutorial text, tutorial system';
+                    
+                default:
+                    return '📚 LINUX LEARNING TUTORIALS\n\n' +
+                           'Available tutorials:\n' +
+                           '  tutorial files - File management\n' +
+                           '  tutorial permissions - File permissions\n' +
+                           '  tutorial text - Text processing\n' +
+                           '  tutorial system - System administration\n' +
+                           '  tutorial network - Network administration\n\n' +
+                           'Example: tutorial files';
+            }
+        },
+        
+        examples: (args: string[]) => {
+            const command = args[0]?.toLowerCase() || 'general';
+            switch (command) {
+                case 'ls':
+                    return '📁 LS COMMAND EXAMPLES\n\n' +
+                           'ls - Basic listing\n' +
+                           'ls -la - Detailed listing with hidden files\n' +
+                           'ls -lh - Human readable file sizes\n' +
+                           'ls -lt - Sort by modification time\n' +
+                           'ls -R - Recursive listing\n' +
+                           'ls *.txt - List only .txt files\n' +
+                           'ls -d */ - List only directories\n\n' +
+                           'Try: examples grep, examples find, examples chmod';
+                    
+                case 'grep':
+                    return '🔍 GREP COMMAND EXAMPLES\n\n' +
+                           'grep "pattern" file.txt - Find pattern in file\n' +
+                           'grep -i "pattern" file.txt - Case insensitive\n' +
+                           'grep -r "pattern" directory/ - Recursive search\n' +
+                           'grep -n "pattern" file.txt - Show line numbers\n' +
+                           'grep -v "pattern" file.txt - Invert match\n' +
+                           'grep -c "pattern" file.txt - Count matches\n' +
+                           'ls -la | grep "txt" - Pipe with ls\n\n' +
+                           'Try: examples ls, examples find, examples chmod';
+                    
+                case 'find':
+                    return '🔎 FIND COMMAND EXAMPLES\n\n' +
+                           'find . -name "*.txt" - Find .txt files\n' +
+                           'find /home -type d -name "projects" - Find directories\n' +
+                           'find . -size +100M - Find large files\n' +
+                           'find . -mtime -7 - Files modified in last 7 days\n' +
+                           'find . -user john - Files owned by john\n' +
+                           'find . -exec rm {} \\; - Delete found files\n' +
+                           'find . -name "*.log" -delete - Delete .log files\n\n' +
+                           'Try: examples ls, examples grep, examples chmod';
+                    
+                case 'chmod':
+                    return '🔐 CHMOD COMMAND EXAMPLES\n\n' +
+                           'chmod 755 script.sh - Owner: rwx, Others: rx\n' +
+                           'chmod 644 file.txt - Owner: rw, Others: r\n' +
+                           'chmod 600 private.txt - Owner: rw only\n' +
+                           'chmod u+x script.sh - Add execute for owner\n' +
+                           'chmod g-w file.txt - Remove write for group\n' +
+                           'chmod o-r file.txt - Remove read for others\n' +
+                           'chmod -R 755 directory/ - Recursive permissions\n\n' +
+                           'Try: examples ls, examples grep, examples find, examples ssh';
+                    
+                case 'ssh':
+                    return '🔑 SSH COMMAND EXAMPLES\n\n' +
+                           'ssh user@host - Connect to remote host\n' +
+                           'ssh -p 2222 user@host - Connect on specific port\n' +
+                           'ssh -i key.pem user@host - Use specific key file\n' +
+                           'ssh -X user@host - Enable X11 forwarding\n' +
+                           'ssh -L 8080:localhost:80 user@host - Local port forwarding\n' +
+                           'ssh -R 8080:localhost:80 user@host - Remote port forwarding\n' +
+                           'ssh-copy-id user@host - Copy public key to host\n\n' +
+                           'Try: examples ls, examples grep, examples find, examples chmod';
+                    
+                case 'docker':
+                    return '🐳 DOCKER COMMAND EXAMPLES\n\n' +
+                           'docker run -it ubuntu - Run interactive Ubuntu container\n' +
+                           'docker ps -a - List all containers\n' +
+                           'docker images - List all images\n' +
+                           'docker build -t myapp . - Build image from Dockerfile\n' +
+                           'docker exec -it container bash - Execute command in container\n' +
+                           'docker logs container - Show container logs\n' +
+                           'docker-compose up -d - Start services in background\n\n' +
+                           'Try: examples ls, examples grep, examples find, examples chmod';
+                    
+                case 'git':
+                    return '📦 GIT COMMAND EXAMPLES\n\n' +
+                           'git init - Initialize repository\n' +
+                           'git clone url - Clone repository\n' +
+                           'git add file - Stage file for commit\n' +
+                           'git commit -m "message" - Commit changes\n' +
+                           'git push origin main - Push to remote\n' +
+                           'git pull origin main - Pull from remote\n' +
+                           'git branch feature - Create new branch\n' +
+                           'git checkout branch - Switch branch\n' +
+                           'git merge branch - Merge branch\n' +
+                           'git log --oneline - Show commit history\n\n' +
+                           'Try: examples ls, examples grep, examples find, examples chmod';
+                    
+                default:
+                    return '💡 COMMAND EXAMPLES\n\n' +
+                           'Available examples:\n' +
+                           '  examples ls - ls command examples\n' +
+                           '  examples grep - grep command examples\n' +
+                           '  examples find - find command examples\n' +
+                           '  examples chmod - chmod command examples\n' +
+                           '  examples ssh - ssh command examples\n' +
+                           '  examples docker - docker command examples\n' +
+                           '  examples git - git command examples\n\n' +
+                           'Example: examples ls';
+            }
+        },
+        
+        cheatsheet: (args: string[]) => {
+            const category = args[0]?.toLowerCase() || 'general';
+            switch (category) {
+                case 'files':
+                    return '📁 FILE OPERATIONS CHEATSHEET\n\n' +
+                           'Create:    touch file.txt\n' +
+                           'Read:      cat file.txt\n' +
+                           'Edit:      nano file.txt\n' +
+                           'Copy:      cp file.txt backup.txt\n' +
+                           'Move:      mv old.txt new.txt\n' +
+                           'Delete:    rm file.txt\n' +
+                           'List:      ls -la\n' +
+                           'Find:      find . -name "*.txt"\n' +
+                           'Search:    grep "pattern" file.txt\n' +
+                           'Count:     wc -l file.txt\n\n' +
+                           'Try: cheatsheet permissions, cheatsheet system';
+                    
+                case 'permissions':
+                    return '🔐 PERMISSIONS CHEATSHEET\n\n' +
+                           'Read:      r (4)\n' +
+                           'Write:     w (2)\n' +
+                           'Execute:   x (1)\n\n' +
+                           'Common:\n' +
+                           '755:       rwxr-xr-x (executable)\n' +
+                           '644:       rw-r--r-- (readable)\n' +
+                           '600:       rw------- (private)\n' +
+                           '777:       rwxrwxrwx (all)\n\n' +
+                           'Commands:\n' +
+                           'chmod 755 file\n' +
+                           'chmod u+x file\n' +
+                           'chmod g-w file\n\n' +
+                           'Try: cheatsheet files, cheatsheet system';
+                    
+                case 'system':
+                    return '⚙️ SYSTEM CHEATSHEET\n\n' +
+                           'Processes:\n' +
+                           'ps aux     - List processes\n' +
+                           'top        - Monitor processes\n' +
+                           'htop       - Enhanced monitor\n' +
+                           'kill 1234  - Kill process\n' +
+                           'jobs       - Background jobs\n' +
+                           'fg %1      - Foreground job\n\n' +
+                           'System Info:\n' +
+                           'df -h      - Disk usage\n' +
+                           'free -m    - Memory usage\n' +
+                           'uptime     - System uptime\n' +
+                           'whoami     - Current user\n' +
+                           'lscpu      - CPU info\n' +
+                           'lsblk      - Block devices\n\n' +
+                           'Services:\n' +
+                           'systemctl status service - Service status\n' +
+                           'systemctl start service  - Start service\n' +
+                           'systemctl stop service   - Stop service\n' +
+                           'systemctl restart service - Restart service\n\n' +
+                           'Try: cheatsheet files, cheatsheet permissions, cheatsheet network';
+                    
+                case 'network':
+                    return '🌐 NETWORK CHEATSHEET\n\n' +
+                           'Connectivity:\n' +
+                           'ping host      - Test connection\n' +
+                           'traceroute host - Trace path\n' +
+                           'telnet host port - Test port\n' +
+                           'nc -zv host port - Netcat test\n\n' +
+                           'Remote Access:\n' +
+                           'ssh user@host  - SSH connection\n' +
+                           'scp file dest  - Secure copy\n' +
+                           'rsync -av src/ dest/ - Sync files\n' +
+                           'wget url       - Download file\n' +
+                           'curl -O url    - Download with curl\n\n' +
+                           'Network Info:\n' +
+                           'ip addr        - Network interfaces\n' +
+                           'ip route       - Routing table\n' +
+                           'netstat -tulpn - Network connections\n' +
+                           'ss -tulpn      - Modern connections\n\n' +
+                           'Try: cheatsheet files, cheatsheet permissions, cheatsheet system';
+                    
+                case 'docker':
+                    return '🐳 DOCKER CHEATSHEET\n\n' +
+                           'Containers:\n' +
+                           'docker run -it image - Run container\n' +
+                           'docker ps -a   - List containers\n' +
+                           'docker exec -it container bash - Execute\n' +
+                           'docker logs container - Show logs\n' +
+                           'docker stop container - Stop container\n' +
+                           'docker rm container - Remove container\n\n' +
+                           'Images:\n' +
+                           'docker images - List images\n' +
+                           'docker build -t name . - Build image\n' +
+                           'docker pull image - Pull image\n' +
+                           'docker push image - Push image\n' +
+                           'docker rmi image - Remove image\n\n' +
+                           'Compose:\n' +
+                           'docker-compose up -d - Start services\n' +
+                           'docker-compose down - Stop services\n' +
+                           'docker-compose logs - Show logs\n' +
+                           'docker-compose ps - List services\n\n' +
+                           'Try: cheatsheet files, cheatsheet permissions, cheatsheet system';
+                    
+                case 'git':
+                    return '📦 GIT CHEATSHEET\n\n' +
+                           'Repository:\n' +
+                           'git init       - Initialize repo\n' +
+                           'git clone url  - Clone repo\n' +
+                           'git remote -v  - Show remotes\n' +
+                           'git status     - Show status\n\n' +
+                           'Commits:\n' +
+                           'git add file   - Stage file\n' +
+                           'git commit -m "msg" - Commit\n' +
+                           'git push origin main - Push\n' +
+                           'git pull origin main - Pull\n\n' +
+                           'Branches:\n' +
+                           'git branch     - List branches\n' +
+                           'git branch name - Create branch\n' +
+                           'git checkout branch - Switch\n' +
+                           'git merge branch - Merge\n\n' +
+                           'History:\n' +
+                           'git log --oneline - Commit history\n' +
+                           'git diff       - Show changes\n' +
+                           'git reset HEAD~1 - Undo commit\n\n' +
+                           'Try: cheatsheet files, cheatsheet permissions, cheatsheet system';
+                    
+                default:
+                    return '📋 LINUX CHEATSHEETS\n\n' +
+                           'Available cheatsheets:\n' +
+                           '  cheatsheet files - File operations\n' +
+                           '  cheatsheet permissions - File permissions\n' +
+                           '  cheatsheet system - System administration\n' +
+                           '  cheatsheet network - Network administration\n' +
+                           '  cheatsheet docker - Docker commands\n' +
+                           '  cheatsheet git - Git commands\n\n' +
+                           'Example: cheatsheet files';
+            }
+        },
+        
+        man: (args: string[]) => {
+            const command = args[0]?.toLowerCase() || 'help';
+            switch (command) {
+                case 'ls':
+                    return '📖 LS MANUAL PAGE\n\n' +
+                           'NAME\n   ls - list directory contents\n\n' +
+                           'SYNOPSIS\n   ls [OPTION]... [FILE]...\n\n' +
+                           'DESCRIPTION\n   List information about the FILEs (the current directory by default).\n\n' +
+                           'OPTIONS\n   -a, --all\n          do not ignore entries starting with .\n\n' +
+                           '   -l     use a long listing format\n\n' +
+                           '   -h, --human-readable\n          with -l, print sizes in human readable format\n\n' +
+                           'EXAMPLES\n   ls -la\n   ls -lh\n   ls *.txt\n\n' +
+                           'Try: man grep, man find, man chmod';
+                    
+                case 'grep':
+                    return '📖 GREP MANUAL PAGE\n\n' +
+                           'NAME\n   grep - print lines matching a pattern\n\n' +
+                           'SYNOPSIS\n   grep [OPTIONS] PATTERN [FILE...]\n\n' +
+                           'DESCRIPTION\n   grep searches for PATTERN in each FILE.\n\n' +
+                           'OPTIONS\n   -i, --ignore-case\n          ignore case distinctions\n\n' +
+                           '   -r, --recursive\n          read all files under each directory\n\n' +
+                           '   -n, --line-number\n          print line number with output\n\n' +
+                           'EXAMPLES\n   grep "error" log.txt\n   grep -i "warning" *.log\n   grep -rn "function" src/\n\n' +
+                           'Try: man ls, man find, man chmod';
+                    
+                case 'find':
+                    return '📖 FIND MANUAL PAGE\n\n' +
+                           'NAME\n   find - search for files in a directory hierarchy\n\n' +
+                           'SYNOPSIS\n   find [PATH] [EXPRESSION]\n\n' +
+                           'DESCRIPTION\n   find searches the directory tree rooted at each given file name.\n\n' +
+                           'EXPRESSIONS\n   -name PATTERN\n          base of file name matches PATTERN\n\n' +
+                           '   -type TYPE\n          file is of type TYPE (d=directory, f=file)\n\n' +
+                           '   -size SIZE\n          file uses SIZE units of space\n\n' +
+                           'EXAMPLES\n   find . -name "*.txt"\n   find /home -type d\n   find . -size +100M\n\n' +
+                           'Try: man ls, man grep, man chmod';
+                    
+                case 'chmod':
+                    return '📖 CHMOD MANUAL PAGE\n\n' +
+                           'NAME\n   chmod - change file mode bits\n\n' +
+                           'SYNOPSIS\n   chmod [OPTION]... MODE[,MODE]... FILE...\n\n' +
+                           'DESCRIPTION\n   chmod changes the file mode bits of each given file.\n\n' +
+                           'MODES\n   u     user (owner)\n   g     group\n   o     other\n   a     all\n\n' +
+                           'OPERATORS\n   +     add permission\n   -     remove permission\n   =     set permission\n\n' +
+                           'EXAMPLES\n   chmod 755 script.sh\n   chmod u+x file.sh\n   chmod g-w file.txt\n\n' +
+                           'Try: man ls, man grep, man find, man ssh';
+                    
+                case 'ssh':
+                    return '📖 SSH MANUAL PAGE\n\n' +
+                           'NAME\n   ssh - OpenSSH SSH client (remote login program)\n\n' +
+                           'SYNOPSIS\n   ssh [-46AaCfGgKkMNnqsTtVvXxYy] [-B bind_interface]\n   ssh [-46AaCfGgKkMNnqsTtVvXxYy] [-b bind_address]\n\n' +
+                           'DESCRIPTION\n   ssh (SSH client) is a program for logging into a remote machine\n   and for executing commands on a remote machine.\n\n' +
+                           'OPTIONS\n   -p port\n          Port to connect to on the remote host\n\n' +
+                           '   -i identity_file\n          Selects a file from which the identity (private key)\n          for public key authentication is read\n\n' +
+                           '   -X     Enables X11 forwarding\n\n' +
+                           'EXAMPLES\n   ssh user@host\n   ssh -p 2222 user@host\n   ssh -i key.pem user@host\n\n' +
+                           'Try: man ls, man grep, man find, man chmod';
+                    
+                case 'docker':
+                    return '📖 DOCKER MANUAL PAGE\n\n' +
+                           'NAME\n   docker - Docker command line interface\n\n' +
+                           'SYNOPSIS\n   docker [OPTIONS] COMMAND [ARG...]\n\n' +
+                           'DESCRIPTION\n   Docker is a platform for developers and sysadmins to develop,\n   deploy, and run applications with containers.\n\n' +
+                           'COMMANDS\n   run     Run a command in a new container\n   ps      List containers\n   images  List images\n   build   Build an image from a Dockerfile\n   exec    Run a command in a running container\n   logs    Fetch the logs of a container\n\n' +
+                           'EXAMPLES\n   docker run -it ubuntu\n   docker ps -a\n   docker build -t myapp .\n\n' +
+                           'Try: man ls, man grep, man find, man chmod';
+                    
+                case 'git':
+                    return '📖 GIT MANUAL PAGE\n\n' +
+                           'NAME\n   git - the stupid content tracker\n\n' +
+                           'SYNOPSIS\n   git [--version] [--help] [-C <path>] [-c <name>=<value>]\n   git <command> [<args>]\n\n' +
+                           'DESCRIPTION\n   Git is a fast, scalable, distributed revision control system\n   with an unusually rich command set.\n\n' +
+                           'COMMANDS\n   init    Create an empty Git repository\n   clone   Clone a repository into a new directory\n   add     Add file contents to the index\n   commit  Record changes to the repository\n   push    Update remote refs along with associated objects\n   pull    Fetch from and integrate with another repository\n\n' +
+                           'EXAMPLES\n   git init\n   git clone https://github.com/user/repo.git\n   git add file.txt\n   git commit -m "Initial commit"\n\n' +
+                           'Try: man ls, man grep, man find, man chmod';
+                    
+                default:
+                    return '📖 MANUAL PAGES\n\n' +
+                           'Available manual pages:\n' +
+                           '  man ls - ls command manual\n' +
+                           '  man grep - grep command manual\n' +
+                           '  man find - find command manual\n' +
+                           '  man chmod - chmod command manual\n' +
+                           '  man ssh - ssh command manual\n' +
+                           '  man docker - docker command manual\n' +
+                           '  man git - git command manual\n\n' +
+                           'Example: man ls';
+            }
+        },
+        
+        learn: () => {
+            return '🎓 LINUX LEARNING RESOURCES\n\n' +
+                   'Available learning commands:\n' +
+                   '  tutorial [topic] - Interactive tutorials\n' +
+                   '  examples [cmd] - Command examples\n' +
+                   '  cheatsheet [cat] - Quick reference\n' +
+                   '  man [cmd] - Manual pages\n\n' +
+                   'Tutorials available:\n' +
+                   '  tutorial files - File management\n' +
+                   '  tutorial permissions - File permissions\n' +
+                   '  tutorial text - Text processing\n' +
+                   '  tutorial system - System administration\n' +
+                   '  tutorial network - Network administration\n\n' +
+                   'Examples available:\n' +
+                   '  examples ls, examples grep, examples find, examples chmod\n' +
+                   '  examples ssh, examples docker, examples git\n\n' +
+                   'Cheatsheets available:\n' +
+                   '  cheatsheet files, cheatsheet permissions, cheatsheet system\n' +
+                   '  cheatsheet network, cheatsheet docker, cheatsheet git\n\n' +
+                   'Manual pages available:\n' +
+                   '  man ls, man grep, man find, man chmod\n' +
+                   '  man ssh, man docker, man git\n\n' +
+                   'Example: tutorial files';
+        }
     };
 
     constructor() {
@@ -95,12 +740,41 @@ export class TerminalApp {
         // Immediate focus - no timeout for Orange Pi
             this.terminalBody?.focus();
         
+        // Periodic check to fix empty terminal (every 5 seconds)
+        setInterval(() => {
+            this.checkAndFixEmptyTerminal();
+        }, 5000);
+        
         document.title = 'Linux App - Ready!';
     }
 
     public initTerminal(): void {
+        // Ensure terminal elements are available
+        if (!this.terminalContent || !this.terminalBody) {
+            console.error('Terminal elements not found during initTerminal');
+            return;
+        }
+        
+        // Clear any existing content to ensure clean state
+        if (this.terminalContent) {
+            this.terminalContent.innerHTML = '';
+        }
+        
         // Show welcome message when terminal is selected from start menu
         this.showWelcomeMessage();
+        
+        // Ensure terminal is focused
+        setTimeout(() => {
+            this.terminalBody?.focus();
+        }, 100);
+    }
+    
+    public checkAndFixEmptyTerminal(): void {
+        // Check if terminal is empty and fix it
+        if (this.terminalContent && this.terminalContent.innerHTML.trim() === '') {
+            console.log('Terminal is empty, reinitializing...');
+            this.showWelcomeMessage();
+        }
     }
 
     private showWelcomeMessage(): void {
@@ -145,6 +819,9 @@ export class TerminalApp {
         this.addOutput('Type \'help\' for available commands.');
         this.addOutput('Type \'quit\' to go back.');
         this.addOutput('');
+        
+        // Add a prompt after showing terminal challenge
+        this.addPrompt();
         
         return '';
     }
@@ -796,10 +1473,26 @@ export class TerminalApp {
                     this.updateCurrentLine();
                     break;
                 case 'c':
-                    // Ctrl+C: Interrupt current command (show ^C)
-                    this.addOutput('^C');
+                    // Ctrl+C: Copy current input to clipboard
+                    if (this.currentInput.trim()) {
+                        (window as any).terminalClipboard = this.currentInput;
+                        this.addOutput(`Copied "${this.currentInput}" to clipboard`);
+                    } else {
+                        // If no input, show interrupt signal
+                        this.addOutput('^C');
+                    }
                     this.currentInput = '';
                     this.addPrompt();
+                    break;
+                case 'v':
+                    // Ctrl+V: Paste from clipboard
+                    const clipboard = (window as any).terminalClipboard;
+                    if (clipboard) {
+                        this.currentInput += clipboard;
+                        this.updateCurrentLine();
+                    } else {
+                        this.addOutput('Clipboard is empty');
+                    }
                     break;
                 case 'd':
                     // Ctrl+D: End of file (exit if empty line)
