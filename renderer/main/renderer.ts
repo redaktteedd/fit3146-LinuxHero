@@ -21,7 +21,7 @@ export class TerminalApp {
     private activatePuzzle: Puzzle | null = null;
     
     private commands: TerminalCommands = {
-        help: () => 'Available commands:\n  help - Show this help message\n  clear - Clear the terminal\n  echo <text> - Echo text\n  date - Show current date\n  whoami - Show current user\n  ls - List files\n  pwd - Show current directory\n  cat <filename> - Read a file\n  play - Show Terminal Challenge menu\n  puzzle - Start a puzzle\n  solve <answer> - Submit your puzzle answer\n  rpg - Start a RPG game\n  commandrace - Start a command race game\n  notes - List all notes\n  note <title> - Create or edit a note\n  rmnote <title> - Delete a note',
+        help: () => 'Available commands:\n  help - Show this help message\n  clear - Clear the terminal\n  echo <text> - Echo text\n  date - Show current date\n  whoami - Show current user\n  ls - List files\n  pwd - Show current directory\n  cat <filename> - Read a file\n  play - Show Terminal Challenge menu\n  puzzle - Start a puzzle\n  solve <answer> - Submit your puzzle answer\n  rpg - Start a RPG game\n  commandrace - Start a command race game\n  notes - List all notes\n  note <title> - Create or edit a note\n  rmnote <title> - Delete a note\n\nShell shortcuts:\n  Ctrl+A - Move to beginning of line\n  Ctrl+E - Move to end of line\n  Ctrl+K - Delete to end of line\n  Ctrl+U - Delete to beginning of line\n  Ctrl+W - Delete previous word\n  Ctrl+C - Interrupt command\n  Ctrl+D - Exit (on empty line)\n  Ctrl+L - Clear screen\n  Ctrl+R - Reverse search history\n  Ctrl+T - Transpose characters',
         clear: () => {
             if (this.terminalContent) {
                 this.terminalContent.innerHTML = '';
@@ -751,6 +751,71 @@ export class TerminalApp {
                 this.historyIndex = this.commandHistory.length;
                 this.currentInput = '';
                 this.updateCurrentLine();
+            }
+        } else if (e.ctrlKey && !e.metaKey && !e.altKey) {
+            // Handle Ctrl+key combinations for shell scripting
+            e.preventDefault();
+            
+            switch (e.key.toLowerCase()) {
+                case 'a':
+                    // Ctrl+A: Move cursor to beginning of line
+                    this.currentInput = '';
+                    this.updateCurrentLine();
+                    break;
+                case 'e':
+                    // Ctrl+E: Move cursor to end of line (already at end in our implementation)
+                    break;
+                case 'k':
+                    // Ctrl+K: Delete from cursor to end of line
+                    this.currentInput = '';
+                    this.updateCurrentLine();
+                    break;
+                case 'u':
+                    // Ctrl+U: Delete from beginning to cursor
+                    this.currentInput = '';
+                    this.updateCurrentLine();
+                    break;
+                case 'w':
+                    // Ctrl+W: Delete word before cursor
+                    this.currentInput = this.currentInput.replace(/\s*\S+\s*$/, '');
+                    this.updateCurrentLine();
+                    break;
+                case 'c':
+                    // Ctrl+C: Interrupt current command (show ^C)
+                    this.addOutput('^C');
+                    this.currentInput = '';
+                    this.addPrompt();
+                    break;
+                case 'd':
+                    // Ctrl+D: End of file (exit if empty line)
+                    if (this.currentInput.trim() === '') {
+                        this.addOutput('exit');
+                        this.addOutput('Goodbye!');
+                        return;
+                    }
+                    break;
+                case 'l':
+                    // Ctrl+L: Clear screen
+                    if (this.terminalContent) {
+                        this.terminalContent.innerHTML = '';
+                    }
+                    this.addPrompt();
+                    break;
+                case 'r':
+                    // Ctrl+R: Reverse search through history
+                    this.addOutput('(reverse-i-search)`\': ');
+                    break;
+                case 't':
+                    // Ctrl+T: Transpose characters
+                    if (this.currentInput.length >= 2) {
+                        const chars = this.currentInput.split('');
+                        const last = chars.pop();
+                        const secondLast = chars.pop();
+                        chars.push(last!, secondLast!);
+                        this.currentInput = chars.join('');
+                        this.updateCurrentLine();
+                    }
+                    break;
             }
         } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
             // Handle all printable characters (letters, numbers, symbols, spaces)
