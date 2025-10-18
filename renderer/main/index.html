@@ -13,47 +13,47 @@
             },
             plugins: [require('daisyui')],
             daisyui: {
-                themes: ["business", "black"],
+                themes: ["business", "corporate"],
             },
         }
     </script>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body data-theme="business" class="min-h-screen">
+<body data-theme="corporate" class="min-h-screen">
     <div class="min-h-screen bg-base-100">
         <!-- Start Menu -->
         <div class="start-menu flex items-center justify-center min-h-screen p-8" id="start-menu">
             <div class="start-menu-content max-w-4xl w-full">
                 <div class="start-menu-header text-center mb-12">
-                    <h1 class="text-6xl font-bold mb-4 text-primary-content">Linux Hero</h1>
+                    <h1 class="text-6xl font-bold mb-4 text-primary-c-content">Linux</h1>
                     <p class="text-xl text-base-content/90">Choose your learning path</p>
                 </div>
                 <div class="start-menu-options grid grid-cols-1 md:grid-cols-2 gap-6">
                     <button class="start-option card bg-base-200 hover:bg-base-300 border border-base-300 hover:border-primary rounded-xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl" onclick="selectStartOption('terminal')">
                         <div class="start-icon text-4xl mb-4">💻</div>
                         <div class="start-text text-left">
-                            <h3 class="text-xl font-semibold mb-2 text-primary-content">Terminal</h3>
+                            <h3 class="text-xl font-semibold mb-2 text-primary-c-content">Terminal</h3>
                             <p class="text-base-content/90">Practice Linux commands and explore the terminal</p>
                         </div>
                     </button>
                     <button class="start-option card bg-base-200 hover:bg-base-300 border border-base-300 hover:border-primary rounded-xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl" onclick="selectStartOption('learn')">
                         <div class="start-icon text-4xl mb-4">📚</div>
                         <div class="start-text text-left">
-                            <h3 class="text-xl font-semibold mb-2 text-primary-content">Learn</h3>
+                            <h3 class="text-xl font-semibold mb-2 text-primary-c-content">Learn</h3>
                             <p class="text-base-content/90">Study Linux concepts and commands</p>
                         </div>
                     </button>
                     <button class="start-option card bg-base-200 hover:bg-base-300 border border-base-300 hover:border-primary rounded-xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl" onclick="selectStartOption('play')">
                         <div class="start-icon text-4xl mb-4">🎮</div>
                         <div class="start-text text-left">
-                            <h3 class="text-xl font-semibold mb-2 text-primary-content">Play</h3>
+                            <h3 class="text-xl font-semibold mb-2 text-primary-c-content">Play</h3>
                             <p class="text-base-content/90">Interactive terminal games and challenges</p>
                         </div>
                     </button>
                     <button class="start-option card bg-base-200 hover:bg-base-300 border border-base-300 hover:border-primary rounded-xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl" onclick="selectStartOption('notes')">
                         <div class="start-icon text-4xl mb-4">📝</div>
                         <div class="start-text text-left">
-                            <h3 class="text-xl font-semibold mb-2 text-primary-content">Notes</h3>
+                            <h3 class="text-xl font-semibold mb-2 text-primary-c-content">Notes</h3>
                             <p class="text-base-content/90">Take notes and manage your learning</p>
                         </div>
                     </button>
@@ -97,7 +97,7 @@
         <!-- Learn Tab -->
         <div class="tab-content p-6" id="learn">
             <div class="learn-container">
-                <h2 class="text-3xl font-bold mb-8 text-center text-primary">Learning Resources</h2>
+                <h2 class="text-3xl font-bold mb-8 text-center text-primary-c-content">Learning Resources</h2>
                 
                 <!-- Linux Commands Module -->
                 <div class="learning-module card bg-base-200 border border-base-300 mb-6 overflow-hidden shadow-lg" id="linux-commands-module">
@@ -107,7 +107,7 @@
                     </div>
                     <div class="module-content p-6">
                         <div class="lesson-section mb-8">
-                            <h4 class="text-lg font-semibold mb-4 text-primary">Essential Commands</h4>
+                            <h4 class="text-lg font-semibold mb-4 text-primary-c">Essential Commands</h4>
                             <div class="command-list space-y-3">
                                 <div class="command-item bg-base-200 p-4 rounded-lg border border-base-300"><code class="text-success font-mono">ls</code> - List directory contents<br><small class="text-base-content/80">Example: <code class="text-warning font-mono">ls -la</code></small></div>
                                 <div class="command-item bg-base-200 p-4 rounded-lg border border-base-300"><code class="text-success font-mono">cd</code> - Change directory<br><small class="text-base-content/80">Example: <code class="text-warning font-mono">cd /home/user</code></small></div>
@@ -121,13 +121,13 @@
                         </div>
                         
                         <div class="lesson-section mb-8">
-                            <h4 class="text-lg font-semibold mb-4 text-primary">File Permissions</h4>
+                            <h4 class="text-lg font-semibold mb-4 text-primary-c">File Permissions</h4>
                             <div class="permission-explanation bg-base-200 p-4 rounded-lg border border-base-300">
                                 <p class="mb-4 text-base-content">Linux uses a 3-tier permission system:</p>
                                 <ul class="list-disc list-inside space-y-2 mb-4 text-base-content">
-                                    <li><strong class="text-primary">Owner (u)</strong> - File owner permissions</li>
-                                    <li><strong class="text-primary">Group (g)</strong> - Group member permissions</li>
-                                    <li><strong class="text-primary">Others (o)</strong> - Everyone else permissions</li>
+                                    <li><strong class="text-primary-c">Owner (u)</strong> - File owner permissions</li>
+                                    <li><strong class="text-primary-c">Group (g)</strong> - Group member permissions</li>
+                                    <li><strong class="text-primary-c">Others (o)</strong> - Everyone else permissions</li>
                                 </ul>
                                 <div class="permission-examples space-y-2">
                                     <code class="text-success font-mono block">chmod 755 file.txt</code> <span class="text-base-content/80">- Owner: read/write/execute, Group/Others: read/execute</span><br>
@@ -137,7 +137,7 @@
                         </div>
                         
                         <div class="quiz-section">
-                            <h4 class="text-lg font-semibold mb-4 text-primary">Quick Quiz</h4>
+                            <h4 class="text-lg font-semibold mb-4 text-primary-c">Quick Quiz</h4>
                             <div class="quiz-question bg-base-200 p-4 rounded-lg border border-base-300">
                                 <p class="mb-4 text-base-content">What command would you use to create a directory called "projects"?</p>
                                 <div class="space-y-2">
@@ -364,22 +364,22 @@ fi</code></pre>
                 <!-- Learning Cards Grid -->
                 <div class="learn-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
                     <div class="learn-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
-                        <h3 class="text-xl font-semibold mb-3 text-primary">📚 Linux Commands</h3>
+                        <h3 class="text-xl font-semibold mb-3 text-primary-c">📚 Linux Commands</h3>
                         <p class="text-base-content/70 mb-4">Master essential Linux terminal commands</p>
                         <button class="learn-btn btn btn-primary w-full" onclick="openModule('linux-commands-module')">Start Learning</button>
                     </div>
                     <div class="learn-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
-                        <h3 class="text-xl font-semibold mb-3 text-primary">🔧 File System</h3>
+                        <h3 class="text-xl font-semibold mb-3 text-primary-c">🔧 File System</h3>
                         <p class="text-base-content/70 mb-4">Understand Linux file system structure</p>
                         <button class="learn-btn btn btn-primary w-full" onclick="openModule('file-system-module')">Explore</button>
                     </div>
                     <div class="learn-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
-                        <h3 class="text-xl font-semibold mb-3 text-primary">⚙️ System Administration</h3>
+                        <h3 class="text-xl font-semibold mb-3 text-primary-c">⚙️ System Administration</h3>
                         <p class="text-base-content/70 mb-4">Learn system administration basics</p>
                         <button class="learn-btn btn btn-primary w-full" onclick="openModule('sys-admin-module')">Study</button>
                     </div>
                     <div class="learn-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
-                        <h3 class="text-xl font-semibold mb-3 text-primary">🐧 Shell Scripting</h3>
+                        <h3 class="text-xl font-semibold mb-3 text-primary-c">🐧 Shell Scripting</h3>
                         <p class="text-base-content/70 mb-4">Write your first shell scripts</p>
                         <button class="learn-btn btn btn-primary w-full" onclick="openModule('shell-scripting-module')">Practice</button>
                     </div>
@@ -390,23 +390,23 @@ fi</code></pre>
         <!-- Play Tab -->
         <div class="tab-content p-6" id="play">
             <div class="play-container">
-                <h2 class="text-3xl font-bold mb-8 text-center text-primary">Games & Challenges</h2>
+                <h2 class="text-3xl font-bold mb-8 text-center text-primary-c-content">Games & Challenges</h2>
                 
 
                 <!-- Game Cards Grid -->
         <div class="play-grid grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="play-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
-                <h3 class="text-xl font-semibold mb-3 text-primary">🎯 Terminal Puzzle</h3>
+                <h3 class="text-xl font-semibold mb-3 text-primary-c">🎯 Terminal Puzzle</h3>
                 <p class="text-base-content/70 mb-4">Solve puzzles using terminal commands</p>
                 <button class="play-btn btn btn-success w-full" onclick="startPuzzleFromPlay()">Play Now</button>
             </div>
             <div class="play-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
-                <h3 class="text-xl font-semibold mb-3 text-primary">🎮 Terminal RPG</h3>
+                <h3 class="text-xl font-semibold mb-3 text-primary-c">🎮 Terminal RPG</h3>
                 <p class="text-base-content/70 mb-4">Adventure game using terminal commands</p>
                 <button class="play-btn btn btn-success w-full" onclick="startRPGFromPlay()">Play Now</button>
             </div>
             <div class="play-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
-                <h3 class="text-xl font-semibold mb-3 text-primary">🏃‍♂️ Command Race</h3>
+                <h3 class="text-xl font-semibold mb-3 text-primary-c">🏃‍♂️ Command Race</h3>
                 <p class="text-base-content/70 mb-4">Test your typing speed with Linux commands</p>
                 <button class="play-btn btn btn-success w-full" onclick="startCommandRaceFromPlay()">Play Now</button>
             </div>
@@ -418,7 +418,7 @@ fi</code></pre>
         <div class="tab-content p-6" id="notes">
             <div class="notes-container">
                 <div class="notes-header flex items-center justify-between mb-6">
-                    <h2 class="text-3xl font-bold text-primary">📝 Notes</h2>
+                    <h2 class="text-3xl font-bold text-primary-c-content">📝 Notes</h2>
                     <button class="new-note-btn btn btn-primary" onclick="createNewNote()">+ New Note</button>
                 </div>
                 
