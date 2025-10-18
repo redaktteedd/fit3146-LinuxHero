@@ -770,6 +770,12 @@ export class TerminalApp {
     }
     
     public checkAndFixEmptyTerminal(): void {
+        // Only check if terminal tab is visible (has active class)
+        const terminalTab = document.getElementById('terminal');
+        if (!terminalTab || !terminalTab.classList.contains('active')) {
+            return; // Terminal tab is not visible, don't add content
+        }
+        
         // Check if terminal is empty and fix it
         if (this.terminalContent && this.terminalContent.innerHTML.trim() === '') {
             console.log('Terminal is empty, reinitializing...');
@@ -1644,6 +1650,18 @@ function goBackToMenu(): void {
     if (tabNav) {
         tabNav.style.display = 'none';
     }
+    
+    // Hide all tab content
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(button => {
+        button.classList.remove('btn-active');
+    });
     
     // Show start menu
     const startMenu = document.getElementById('start-menu');

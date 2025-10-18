@@ -4,44 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linux App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {},
+            },
+            plugins: [require('daisyui')],
+            daisyui: {
+                themes: ["business", "black"],
+            },
+        }
+    </script>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <div class="app-container">
+<body data-theme="business" class="min-h-screen">
+    <div class="min-h-screen bg-base-100">
         <!-- Start Menu -->
-        <div class="start-menu" id="start-menu">
-            <div class="start-menu-content">
-                <div class="start-menu-header">
-                    <h1>🐧 Linux Hero 🐧</h1>
-                    <p>Choose your learning path</p>
+        <div class="start-menu flex items-center justify-center min-h-screen p-8" id="start-menu">
+            <div class="start-menu-content max-w-4xl w-full">
+                <div class="start-menu-header text-center mb-12">
+                    <h1 class="text-6xl font-bold mb-4 text-primary-content">Linux Hero</h1>
+                    <p class="text-xl text-base-content/90">Choose your learning path</p>
                 </div>
-                <div class="start-menu-options">
-                    <button class="start-option" onclick="selectStartOption('terminal')">
-                        <div class="start-icon">💻</div>
-                        <div class="start-text">
-                            <h3>Terminal</h3>
-                            <p>Practice Linux commands and explore the terminal</p>
+                <div class="start-menu-options grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button class="start-option card bg-base-200 hover:bg-base-300 border border-base-300 hover:border-primary rounded-xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl" onclick="selectStartOption('terminal')">
+                        <div class="start-icon text-4xl mb-4">💻</div>
+                        <div class="start-text text-left">
+                            <h3 class="text-xl font-semibold mb-2 text-primary-content">Terminal</h3>
+                            <p class="text-base-content/90">Practice Linux commands and explore the terminal</p>
                         </div>
                     </button>
-                    <button class="start-option" onclick="selectStartOption('learn')">
-                        <div class="start-icon">📚</div>
-                        <div class="start-text">
-                            <h3>Learn</h3>
-                            <p>Study Linux concepts and commands</p>
+                    <button class="start-option card bg-base-200 hover:bg-base-300 border border-base-300 hover:border-primary rounded-xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl" onclick="selectStartOption('learn')">
+                        <div class="start-icon text-4xl mb-4">📚</div>
+                        <div class="start-text text-left">
+                            <h3 class="text-xl font-semibold mb-2 text-primary-content">Learn</h3>
+                            <p class="text-base-content/90">Study Linux concepts and commands</p>
                         </div>
                     </button>
-                    <button class="start-option" onclick="selectStartOption('play')">
-                        <div class="start-icon">🎮</div>
-                        <div class="start-text">
-                            <h3>Play</h3>
-                            <p>Interactive terminal games and challenges</p>
+                    <button class="start-option card bg-base-200 hover:bg-base-300 border border-base-300 hover:border-primary rounded-xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl" onclick="selectStartOption('play')">
+                        <div class="start-icon text-4xl mb-4">🎮</div>
+                        <div class="start-text text-left">
+                            <h3 class="text-xl font-semibold mb-2 text-primary-content">Play</h3>
+                            <p class="text-base-content/90">Interactive terminal games and challenges</p>
                         </div>
                     </button>
-                    <button class="start-option" onclick="selectStartOption('notes')">
-                        <div class="start-icon">📝</div>
-                        <div class="start-text">
-                            <h3>Notes</h3>
-                            <p>Take notes and manage your learning</p>
+                    <button class="start-option card bg-base-200 hover:bg-base-300 border border-base-300 hover:border-primary rounded-xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl" onclick="selectStartOption('notes')">
+                        <div class="start-icon text-4xl mb-4">📝</div>
+                        <div class="start-text text-left">
+                            <h3 class="text-xl font-semibold mb-2 text-primary-content">Notes</h3>
+                            <p class="text-base-content/90">Take notes and manage your learning</p>
                         </div>
                     </button>
                 </div>
@@ -49,30 +62,32 @@
         </div>
 
         <!-- Tab Navigation -->
-        <div class="tab-nav" id="tab-nav" style="display: none;">
-            <button class="back-to-menu-btn" onclick="goBackToMenu()" title="Return to start menu">
-                <span class="back-icon">🏠</span>
-                <span class="back-text">Menu</span>
+        <div class="tab-nav navbar bg-base-200 border-b border-base-300 p-4" id="tab-nav" style="display: none;">
+            <button class="back-to-menu-btn btn btn-primary" onclick="goBackToMenu()" title="Return to start menu">
+                <span class="back-icon text-lg">🏠</span>
+                <span class="back-text font-medium">Menu</span>
             </button>
-            <button class="tab-btn active" data-tab="terminal">Terminal</button>
-            <button class="tab-btn" data-tab="learn">Learn</button>
-            <button class="tab-btn" data-tab="play">Play</button>
-            <button class="tab-btn" data-tab="notes">Notes</button>
+            <div class="flex gap-2 ml-4">
+                <button class="tab-btn btn btn-sm" data-tab="terminal">Terminal</button>
+                <button class="tab-btn btn btn-sm" data-tab="learn">Learn</button>
+                <button class="tab-btn btn btn-sm" data-tab="play">Play</button>
+                <button class="tab-btn btn btn-sm" data-tab="notes">Notes</button>
+            </div>
         </div>
 
         <!-- Terminal Tab -->
-        <div class="tab-content active" id="terminal">
-            <div class="terminal">
-                <div class="terminal-header">
-                    <div class="terminal-buttons">
-                        <span class="btn close"></span>
-                        <span class="btn minimize"></span>
-                        <span class="btn maximize"></span>
+        <div class="tab-content p-6" id="terminal">
+            <div class="terminal card bg-base-200 border border-base-300 overflow-hidden shadow-xl">
+                <div class="terminal-header bg-base-300 border-b border-base-300 px-4 py-3 flex items-center justify-between">
+                    <div class="terminal-buttons flex gap-2">
+                        <span class="close w-3 h-3 bg-error rounded-full"></span>
+                        <span class="minimize w-3 h-3 bg-warning rounded-full"></span>
+                        <span class="maximize w-3 h-3 bg-success rounded-full"></span>
                     </div>
-                    <div class="terminal-title">Terminal</div>
+                    <div class="terminal-title text-base-content font-medium">Terminal</div>
                 </div>
-                <div class="terminal-body">
-                    <div class="terminal-content">
+                <div class="terminal-body bg-base-100 text-success font-mono text-sm">
+                    <div class="terminal-content p-4 min-h-96" style="font-family: 'Courier New', monospace;">
                         <!-- Terminal content will be generated by JavaScript -->
                     </div>
                 </div>
@@ -80,54 +95,56 @@
         </div>
 
         <!-- Learn Tab -->
-        <div class="tab-content" id="learn">
+        <div class="tab-content p-6" id="learn">
             <div class="learn-container">
-                <h2>Learning Resources</h2>
+                <h2 class="text-3xl font-bold mb-8 text-center text-primary">Learning Resources</h2>
                 
                 <!-- Linux Commands Module -->
-                <div class="learning-module" id="linux-commands-module">
-                    <div class="module-header">
-                        <h3>📚 Linux Commands</h3>
-                        <button class="close-module" onclick="closeModule('linux-commands-module')">×</button>
+                <div class="learning-module card bg-base-200 border border-base-300 mb-6 overflow-hidden shadow-lg" id="linux-commands-module">
+                    <div class="module-header bg-base-300 px-6 py-4 flex items-center justify-between">
+                        <h3 class="text-xl font-semibold text-base-content">📚 Linux Commands</h3>
+                        <button class="close-module btn btn-sm btn-circle btn-ghost" onclick="closeModule('linux-commands-module')">×</button>
                     </div>
-                    <div class="module-content">
-                        <div class="lesson-section">
-                            <h4>Essential Commands</h4>
-                            <div class="command-list">
-                                <div class="command-item"><code>ls</code> - List directory contents<br><small>Example: <code>ls -la</code></small></div>
-                                <div class="command-item"><code>cd</code> - Change directory<br><small>Example: <code>cd /home/user</code></small></div>
-                                <div class="command-item"><code>pwd</code> - Print working directory<br><small>Example: <code>pwd</code></small></div>
-                                <div class="command-item"><code>mkdir</code> - Create directory<br><small>Example: <code>mkdir new_folder</code></small></div>
-                                <div class="command-item"><code>rm</code> - Remove files/directories<br><small>Example: <code>rm -rf folder_name</code></small></div>
-                                <div class="command-item"><code>cp</code> - Copy files<br><small>Example: <code>cp file.txt backup.txt</code></small></div>
-                                <div class="command-item"><code>mv</code> - Move/rename files<br><small>Example: <code>mv old_name.txt new_name.txt</code></small></div>
-                                <div class="command-item"><code>cat</code> - Display file contents<br><small>Example: <code>cat filename.txt</code></small></div>
+                    <div class="module-content p-6">
+                        <div class="lesson-section mb-8">
+                            <h4 class="text-lg font-semibold mb-4 text-primary">Essential Commands</h4>
+                            <div class="command-list space-y-3">
+                                <div class="command-item bg-base-200 p-4 rounded-lg border border-base-300"><code class="text-success font-mono">ls</code> - List directory contents<br><small class="text-base-content/80">Example: <code class="text-warning font-mono">ls -la</code></small></div>
+                                <div class="command-item bg-base-200 p-4 rounded-lg border border-base-300"><code class="text-success font-mono">cd</code> - Change directory<br><small class="text-base-content/80">Example: <code class="text-warning font-mono">cd /home/user</code></small></div>
+                                <div class="command-item bg-base-200 p-4 rounded-lg border border-base-300"><code class="text-success font-mono">pwd</code> - Print working directory<br><small class="text-base-content/80">Example: <code class="text-warning font-mono">pwd</code></small></div>
+                                <div class="command-item bg-base-200 p-4 rounded-lg border border-base-300"><code class="text-success font-mono">mkdir</code> - Create directory<br><small class="text-base-content/80">Example: <code class="text-warning font-mono">mkdir new_folder</code></small></div>
+                                <div class="command-item bg-base-200 p-4 rounded-lg border border-base-300"><code class="text-success font-mono">rm</code> - Remove files/directories<br><small class="text-base-content/80">Example: <code class="text-warning font-mono">rm -rf folder_name</code></small></div>
+                                <div class="command-item bg-base-200 p-4 rounded-lg border border-base-300"><code class="text-success font-mono">cp</code> - Copy files<br><small class="text-base-content/80">Example: <code class="text-warning font-mono">cp file.txt backup.txt</code></small></div>
+                                <div class="command-item bg-base-200 p-4 rounded-lg border border-base-300"><code class="text-success font-mono">mv</code> - Move/rename files<br><small class="text-base-content/80">Example: <code class="text-warning font-mono">mv old_name.txt new_name.txt</code></small></div>
+                                <div class="command-item bg-base-200 p-4 rounded-lg border border-base-300"><code class="text-success font-mono">cat</code> - Display file contents<br><small class="text-base-content/80">Example: <code class="text-warning font-mono">cat filename.txt</code></small></div>
                             </div>
                         </div>
                         
-                        <div class="lesson-section">
-                            <h4>File Permissions</h4>
-                            <div class="permission-explanation">
-                                <p>Linux uses a 3-tier permission system:</p>
-                                <ul>
-                                    <li><strong>Owner (u)</strong> - File owner permissions</li>
-                                    <li><strong>Group (g)</strong> - Group member permissions</li>
-                                    <li><strong>Others (o)</strong> - Everyone else permissions</li>
+                        <div class="lesson-section mb-8">
+                            <h4 class="text-lg font-semibold mb-4 text-primary">File Permissions</h4>
+                            <div class="permission-explanation bg-base-200 p-4 rounded-lg border border-base-300">
+                                <p class="mb-4 text-base-content">Linux uses a 3-tier permission system:</p>
+                                <ul class="list-disc list-inside space-y-2 mb-4 text-base-content">
+                                    <li><strong class="text-primary">Owner (u)</strong> - File owner permissions</li>
+                                    <li><strong class="text-primary">Group (g)</strong> - Group member permissions</li>
+                                    <li><strong class="text-primary">Others (o)</strong> - Everyone else permissions</li>
                                 </ul>
-                                <div class="permission-examples">
-                                    <code>chmod 755 file.txt</code> - Owner: read/write/execute, Group/Others: read/execute<br>
-                                    <code>chmod u+x script.sh</code> - Add execute permission for owner
+                                <div class="permission-examples space-y-2">
+                                    <code class="text-success font-mono block">chmod 755 file.txt</code> <span class="text-base-content/80">- Owner: read/write/execute, Group/Others: read/execute</span><br>
+                                    <code class="text-success font-mono block">chmod u+x script.sh</code> <span class="text-base-content/80">- Add execute permission for owner</span>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="quiz-section">
-                            <h4>Quick Quiz</h4>
-                            <div class="quiz-question">
-                                <p>What command would you use to create a directory called "projects"?</p>
-                                <button class="quiz-btn" onclick="checkAnswer(this, 'mkdir projects', true)">mkdir projects</button>
-                                <button class="quiz-btn" onclick="checkAnswer(this, 'create projects', false)">create projects</button>
-                                <button class="quiz-btn" onclick="checkAnswer(this, 'newdir projects', false)">newdir projects</button>
+                            <h4 class="text-lg font-semibold mb-4 text-primary">Quick Quiz</h4>
+                            <div class="quiz-question bg-base-200 p-4 rounded-lg border border-base-300">
+                                <p class="mb-4 text-base-content">What command would you use to create a directory called "projects"?</p>
+                                <div class="space-y-2">
+                                    <button class="quiz-btn btn btn-primary w-full" onclick="checkAnswer(this, 'mkdir projects', true)">mkdir projects</button>
+                                    <button class="quiz-btn btn btn-primary w-full" onclick="checkAnswer(this, 'create projects', false)">create projects</button>
+                                    <button class="quiz-btn btn btn-primary w-full" onclick="checkAnswer(this, 'newdir projects', false)">newdir projects</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -345,77 +362,77 @@ fi</code></pre>
                 </div>
 
                 <!-- Learning Cards Grid -->
-                <div class="learn-grid">
-                    <div class="learn-card">
-                        <h3>📚 Linux Commands</h3>
-                        <p>Master essential Linux terminal commands</p>
-                        <button class="learn-btn" onclick="openModule('linux-commands-module')">Start Learning</button>
+                <div class="learn-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+                    <div class="learn-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
+                        <h3 class="text-xl font-semibold mb-3 text-primary">📚 Linux Commands</h3>
+                        <p class="text-base-content/70 mb-4">Master essential Linux terminal commands</p>
+                        <button class="learn-btn btn btn-primary w-full" onclick="openModule('linux-commands-module')">Start Learning</button>
                     </div>
-                    <div class="learn-card">
-                        <h3>🔧 File System</h3>
-                        <p>Understand Linux file system structure</p>
-                        <button class="learn-btn" onclick="openModule('file-system-module')">Explore</button>
+                    <div class="learn-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
+                        <h3 class="text-xl font-semibold mb-3 text-primary">🔧 File System</h3>
+                        <p class="text-base-content/70 mb-4">Understand Linux file system structure</p>
+                        <button class="learn-btn btn btn-primary w-full" onclick="openModule('file-system-module')">Explore</button>
                     </div>
-                    <div class="learn-card">
-                        <h3>⚙️ System Administration</h3>
-                        <p>Learn system administration basics</p>
-                        <button class="learn-btn" onclick="openModule('sys-admin-module')">Study</button>
+                    <div class="learn-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
+                        <h3 class="text-xl font-semibold mb-3 text-primary">⚙️ System Administration</h3>
+                        <p class="text-base-content/70 mb-4">Learn system administration basics</p>
+                        <button class="learn-btn btn btn-primary w-full" onclick="openModule('sys-admin-module')">Study</button>
                     </div>
-                    <div class="learn-card">
-                        <h3>🐧 Shell Scripting</h3>
-                        <p>Write your first shell scripts</p>
-                        <button class="learn-btn" onclick="openModule('shell-scripting-module')">Practice</button>
+                    <div class="learn-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
+                        <h3 class="text-xl font-semibold mb-3 text-primary">🐧 Shell Scripting</h3>
+                        <p class="text-base-content/70 mb-4">Write your first shell scripts</p>
+                        <button class="learn-btn btn btn-primary w-full" onclick="openModule('shell-scripting-module')">Practice</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Play Tab -->
-        <div class="tab-content" id="play">
+        <div class="tab-content p-6" id="play">
             <div class="play-container">
-                <h2>Games & Challenges</h2>
+                <h2 class="text-3xl font-bold mb-8 text-center text-primary">Games & Challenges</h2>
                 
 
                 <!-- Game Cards Grid -->
-        <div class="play-grid">
-            <div class="play-card">
-                <h3>🎯 Terminal Puzzle</h3>
-                <p>Solve puzzles using terminal commands</p>
-                <button class="play-btn" onclick="startPuzzleFromPlay()">Play Now</button>
+        <div class="play-grid grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="play-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
+                <h3 class="text-xl font-semibold mb-3 text-primary">🎯 Terminal Puzzle</h3>
+                <p class="text-base-content/70 mb-4">Solve puzzles using terminal commands</p>
+                <button class="play-btn btn btn-success w-full" onclick="startPuzzleFromPlay()">Play Now</button>
             </div>
-            <div class="play-card">
-                <h3>🎮 Terminal RPG</h3>
-                <p>Adventure game using terminal commands</p>
-                <button class="play-btn" onclick="startRPGFromPlay()">Play Now</button>
+            <div class="play-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
+                <h3 class="text-xl font-semibold mb-3 text-primary">🎮 Terminal RPG</h3>
+                <p class="text-base-content/70 mb-4">Adventure game using terminal commands</p>
+                <button class="play-btn btn btn-success w-full" onclick="startRPGFromPlay()">Play Now</button>
             </div>
-            <div class="play-card">
-                <h3>🏃‍♂️ Command Race</h3>
-                <p>Test your typing speed with Linux commands</p>
-                <button class="play-btn" onclick="startCommandRaceFromPlay()">Play Now</button>
+            <div class="play-card card bg-base-200 border border-base-300 p-6 hover:border-primary transition-colors duration-300">
+                <h3 class="text-xl font-semibold mb-3 text-primary">🏃‍♂️ Command Race</h3>
+                <p class="text-base-content/70 mb-4">Test your typing speed with Linux commands</p>
+                <button class="play-btn btn btn-success w-full" onclick="startCommandRaceFromPlay()">Play Now</button>
             </div>
         </div>
             </div>
         </div>
 
         <!-- Notes Tab -->
-        <div class="tab-content" id="notes">
+        <div class="tab-content p-6" id="notes">
             <div class="notes-container">
-                <div class="notes-header">
-                    <h2>📝 Notes</h2>
-                    <button class="new-note-btn" onclick="createNewNote()">+ New Note</button>
+                <div class="notes-header flex items-center justify-between mb-6">
+                    <h2 class="text-3xl font-bold text-primary">📝 Notes</h2>
+                    <button class="new-note-btn btn btn-primary" onclick="createNewNote()">+ New Note</button>
                 </div>
                 
-                <div class="notes-main">
-                    <div class="notes-sidebar">
-                        <div class="notes-list" id="notes-list">
+                <div class="notes-main flex gap-6 h-96">
+                    <div class="notes-sidebar w-1/3">
+                        <div class="notes-list card bg-base-200 border border-base-300 p-4 h-full" id="notes-list">
                             <!-- Notes will be dynamically added here -->
                         </div>
                     </div>
                     
-                    <div class="note-editor-container">
-                        <div class="note-editor" id="note-editor">
-                            <div class="note-placeholder">
-                                <h3>Welcome to Notes!</h3>
+                    <div class="note-editor-container flex-1">
+                        <div class="note-editor card bg-base-200 border border-base-300 p-4 h-full" id="note-editor">
+                            <div class="note-placeholder text-center text-base-content/70 mt-20">
+                                <h3 class="text-xl font-semibold mb-4">Welcome to Notes!</h3>
                                 <p>Create a new note to get started, or select an existing note from the sidebar.</p>
                             </div>
                         </div>
