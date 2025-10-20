@@ -779,7 +779,13 @@ export class TerminalApp {
         // Check if terminal is empty and fix it
         if (this.terminalContent && this.terminalContent.innerHTML.trim() === '') {
             console.log('Terminal is empty, reinitializing...');
-            this.showWelcomeMessage();
+            
+            // Check if we're in any game mode and should show Terminal Challenge instead
+            if (this.activatePuzzle || (window as any).rpgMode || (window as any).commandRaceMode) {
+                this.showTerminalChallenge();
+            } else {
+                this.showWelcomeMessage();
+            }
         }
     }
 
@@ -1698,6 +1704,16 @@ function initializeTabs(): void {
             const targetContent = document.getElementById(targetTab!);
             if (targetContent) {
                 targetContent.classList.add('active');
+                
+                // Check if switching to terminal tab and fix empty terminal
+                if (targetTab === 'terminal' && globalTerminalApp) {
+                    // Small delay to ensure tab is fully visible before checking
+                    setTimeout(() => {
+                        if (globalTerminalApp) {
+                            globalTerminalApp.checkAndFixEmptyTerminal();
+                        }
+                    }, 100);
+                }
             }
         });
     });
