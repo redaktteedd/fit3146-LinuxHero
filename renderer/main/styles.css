@@ -43,7 +43,7 @@
     flex: 1;
 }
 
-/* Custom scrollbar styling for black theme */
+/* Custom scrollbar styling for dark theme */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -61,4 +61,70 @@
 
 ::-webkit-scrollbar-thumb:hover {
     background: #606060;
+}
+
+/* Line clamp utility for note previews */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Frosted glass effects for notes */
+.note-item {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.note-item:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.note-item.active {
+    background-color: rgba(6, 182, 212, 0.2) !important;
+    border-color: rgba(34, 211, 238, 0.6) !important;
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.2);
+}
+
+/* Enhanced frosted glass for input fields */
+.note-title-input,
+.note-content {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.note-title-input:focus,
+.note-content:focus {
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 20px rgba(34, 211, 238, 0.3);
+}
+
+/* Frosted glass button effects */
+.note-action-btn {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.note-action-btn:hover {
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Enhanced delete button frosted glass */
+.note-delete-btn {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.note-delete-btn:hover {
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
 }

@@ -1825,12 +1825,14 @@ function selectNote(noteId: string): void {
 // Update active note in sidebar
 function updateActiveNote(noteId: string): void {
     document.querySelectorAll('.note-item').forEach(item => {
-        item.classList.remove('active');
+        item.classList.remove('active', 'bg-cyan-500/20', 'border-cyan-400/60', 'shadow-cyan-500/20');
+        item.classList.add('bg-white/5', 'border-white/10');
     });
     
     const activeItem = document.querySelector(`[data-note-id="${noteId}"]`);
     if (activeItem) {
-        activeItem.classList.add('active');
+        activeItem.classList.add('active', 'bg-cyan-500/20', 'border-cyan-400/60', 'shadow-cyan-500/20');
+        activeItem.classList.remove('bg-white/5', 'border-white/10');
     }
 }
 
@@ -1840,18 +1842,20 @@ function renderNotesList(): void {
     if (!notesList) return;
     
     if (notes.length === 0) {
-        notesList.innerHTML = '<div style="text-align: center; color: #7f8c8d; font-style: italic;">No notes yet</div>';
+        notesList.innerHTML = '<div class="text-center text-white/50 italic py-8 backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl">No notes yet</div>';
         return;
     }
     
     notesList.innerHTML = notes.map(note => `
-        <div class="note-item" data-note-id="${note.id}" onclick="selectNote('${note.id}')">
-            <button class="note-delete-btn" onclick="event.stopPropagation(); deleteNote('${note.id}')" title="Delete note">
-                🗑️
-            </button>
-            <div class="note-title">${note.title}</div>
-            <div class="note-preview">${note.content.substring(0, 100)}${note.content.length > 100 ? '...' : ''}</div>
-            <div class="note-date">${note.updatedAt.toLocaleDateString()}</div>
+        <div class="note-item backdrop-blur-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-xl p-4 mb-3 cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-white/10" data-note-id="${note.id}" onclick="selectNote('${note.id}')">
+            <div class="flex items-start justify-between mb-2">
+                <h3 class="note-title text-white font-semibold text-sm truncate flex-1 mr-2">${note.title}</h3>
+                <button class="note-delete-btn text-red-400 hover:text-red-300 hover:bg-red-500/20 backdrop-blur-sm rounded-lg p-1 transition-all duration-200" onclick="event.stopPropagation(); deleteNote('${note.id}')" title="Delete note">
+                    🗑️
+                </button>
+            </div>
+            <div class="note-preview text-white/70 text-xs mb-2 line-clamp-2">${note.content.substring(0, 100)}${note.content.length > 100 ? '...' : ''}</div>
+            <div class="note-date text-white/50 text-xs">${note.updatedAt.toLocaleDateString()}</div>
         </div>
     `).join('');
 }
@@ -1862,12 +1866,12 @@ function renderNoteEditor(note: Note): void {
     if (!noteEditor) return;
     
     noteEditor.innerHTML = `
-        <div class="note-title-editor">
-            <input type="text" class="note-title-input" placeholder="Note title..." value="${note.title}" oninput="updateNoteTitleDirect('${note.id}', this.value)">
+        <div class="note-title-editor mb-4">
+            <input type="text" class="note-title-input w-full backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-lg font-semibold placeholder-white/40 focus:outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 focus:bg-white/10 transition-all duration-300" placeholder="Note title..." value="${note.title}" oninput="updateNoteTitleDirect('${note.id}', this.value)">
         </div>
-        <textarea class="note-content" placeholder="Start typing your note..." oninput="updateNoteContent('${note.id}', this.value)">${note.content}</textarea>
-        <div class="note-actions">
-            <button class="note-action-btn delete" onclick="deleteNote('${note.id}')">Delete</button>
+        <textarea class="note-content w-full backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 focus:bg-white/10 transition-all duration-300 resize-none h-64" placeholder="Start typing your note..." oninput="updateNoteContent('${note.id}', this.value)">${note.content}</textarea>
+        <div class="note-actions mt-4 flex justify-end">
+            <button class="note-action-btn delete px-4 py-2 backdrop-blur-xl bg-red-500/20 hover:bg-red-500/30 border border-red-400/30 hover:border-red-400/50 text-red-300 hover:text-red-200 rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-red-500/20" onclick="deleteNote('${note.id}')">Delete Note</button>
         </div>
     `;
     
@@ -1945,8 +1949,8 @@ function deleteNote(noteId: string): void {
             const noteEditor = document.getElementById('note-editor');
             if (noteEditor) {
                 noteEditor.innerHTML = `
-                    <div class="note-placeholder">
-                        <h3>Welcome to Notes!</h3>
+                    <div class="note-placeholder text-center text-white/70 mt-20">
+                        <h3 class="text-xl font-semibold mb-4 text-white">Welcome to Notes!</h3>
                         <p>Create a new note to get started, or select an existing note from the sidebar.</p>
                     </div>
                 `;
