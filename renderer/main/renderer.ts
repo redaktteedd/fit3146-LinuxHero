@@ -846,8 +846,20 @@ export class TerminalApp {
         loadReadPuzzle().then(puzzle => {
             this.activatePuzzle = puzzle;
             this.displayPuzzleBox(puzzle.description);
+            // Add a prompt for input after displaying the puzzle
+            this.addPrompt();
+            // Focus the terminal for input
+            setTimeout(() => {
+                this.terminalBody?.focus();
+            }, 100);
         }).catch(error => {
             console.error('Failed to load puzzle:', error);
+            // Add a prompt even if puzzle loading fails
+            this.addPrompt();
+            // Focus the terminal for input
+            setTimeout(() => {
+                this.terminalBody?.focus();
+            }, 100);
         });
         
         return 'Loading puzzle...\nPlease wait...';
@@ -1212,6 +1224,27 @@ export class TerminalApp {
         const parts = input.trim().split(' ');
         const command = parts[0]?.toLowerCase() ?? '';
         const args = parts.slice(1);
+        
+        // Handle switching from puzzle mode to other games
+        if (this.activatePuzzle && (command === 'rpg' || command === 'commandrace')) {
+            // Clear puzzle state
+            this.activatePuzzle = null;
+            
+            // Remove any puzzle boxes from the terminal
+            const puzzleBoxes = this.terminalContent?.querySelectorAll('.puzzle-box');
+            puzzleBoxes?.forEach(box => box.remove());
+            
+            this.addOutput('Exiting puzzle mode...');
+            this.addOutput('');
+            
+            // Clear terminal content before switching to new game
+            if (this.terminalContent) {
+                this.terminalContent.innerHTML = '';
+            }
+            
+            // Execute the new game command
+            return this.executeCommand(command);
+        }
         
         if (this.commands[command]) {
             return this.commands[command](args);
@@ -2143,6 +2176,12 @@ function processRpgCommand(command: string): void {
         (window as any).rpgMode = false;
         globalTerminalApp.addOutput('Exiting RPG mode...');
         globalTerminalApp.addOutput('');
+        
+        // Clear terminal content before switching to new game
+        if (globalTerminalApp.terminalContent) {
+            globalTerminalApp.terminalContent.innerHTML = '';
+        }
+        
         // Execute the new game command
         globalTerminalApp.executeCommand(cmd);
         return;
@@ -2292,6 +2331,12 @@ function processCommandRaceCommand(command: string): void {
         commandRaceState = 'waiting';
         globalTerminalApp.addOutput('Exiting Command Race mode...');
         globalTerminalApp.addOutput('');
+        
+        // Clear terminal content before switching to new game
+        if (globalTerminalApp.terminalContent) {
+            globalTerminalApp.terminalContent.innerHTML = '';
+        }
+        
         // Execute the new game command
         globalTerminalApp.executeCommand(cmd);
         return;
