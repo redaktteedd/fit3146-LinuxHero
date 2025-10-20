@@ -537,6 +537,50 @@ function closeMessage(): void {
 // Make closeMessage available globally
 (window as any).closeMessage = closeMessage;
 
+// Navbar helper functions
+function showHelp(): void {
+    const helpMessage = `
+📚 PACKAGE HUNT QUEST GUIDE 📚
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 OBJECTIVE:
+Install the 'ubdecode' package to decrypt the encrypted file and reveal the secret message!
+
+🛠️ HOW TO PLAY:
+1. Use the Software Center on the left to browse available packages
+2. Click on a package to select it
+3. Use the buttons at the bottom to Install/Remove packages
+4. Or use APT commands directly in the terminal on the right
+
+💻 AVAILABLE COMMANDS:
+• apt update - Update package lists
+• apt install <package> - Install a package
+• apt remove <package> - Remove a package
+• apt search <term> - Search for packages
+• apt show <package> - Show package details
+• dpkg -l - List installed packages
+• clear - Clear terminal
+• help - Show command help
+
+💡 HINT:
+Look for packages related to encoding/decoding utilities!
+
+Good luck! 🍀
+    `.trim();
+    
+    alert(helpMessage);
+}
+
+function resetQuest(): void {
+    if (confirm('Are you sure you want to reset the quest? This will reload the page and clear all progress.')) {
+        window.location.reload();
+    }
+}
+
+// Make navbar functions available globally
+(window as any).showHelp = showHelp;
+(window as any).resetQuest = resetQuest;
+
 // Initialize the game when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     new PackageHuntGame();

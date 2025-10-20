@@ -25,7 +25,7 @@ function createWindow(): void {
     frame: true,
     resizable: true,
     minimizable: true,
-    maximizable: false, // Disable maximize for stability
+    maximizable: true, // Disable maximize for stability
     alwaysOnTop: false,
     skipTaskbar: false,
     autoHideMenuBar: true // Hide menu bar for more screen space

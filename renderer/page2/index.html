@@ -7,6 +7,30 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Floating Navbar -->
+    <nav class="floating-navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <span class="brand-icon">🛠️</span>
+                <span class="brand-text">Package Hunt</span>
+            </div>
+            <div class="navbar-menu">
+                <button class="nav-btn" onclick="window.location.href='../main/index.html'" title="Return to Main Menu">
+                    <span>🏠</span>
+                    <span>Home</span>
+                </button>
+                <button class="nav-btn" onclick="showHelp()" title="Show Help">
+                    <span>❓</span>
+                    <span>Help</span>
+                </button>
+                <button class="nav-btn" onclick="resetQuest()" title="Reset Quest">
+                    <span>🔄</span>
+                    <span>Reset</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
     <div class="header">
         <h1>Terminal Quest: Software & Package Hunt</h1>
         <p>Install ubdecode to decrypt the encrypted file and reveal the secret message!</p>

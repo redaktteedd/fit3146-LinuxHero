@@ -905,6 +905,8 @@ export class TerminalApp {
         this.addOutput('');
         this.addOutput('Commands:');
         this.addOutput('  start  - Begin the race with countdown');
+        this.addOutput('  rpg    - Switch to RPG game');
+        this.addOutput('  puzzle - Switch to Puzzle game');
         this.addOutput('  quit   - Exit Command Race mode');
         this.addOutput('');
         this.addOutput('Type "start" when you are ready to begin!');
@@ -2117,7 +2119,20 @@ let commandRaceTexts = [
 function processRpgCommand(command: string): void {
     if (!globalTerminalApp) return;
     
-    switch (command.toLowerCase()) {
+    // Allow switching to other games from RPG mode
+    const cmd = command.toLowerCase().trim();
+    if (cmd === 'commandrace' || cmd === 'puzzle') {
+        // Exit RPG mode first
+        rpgMode = false;
+        (window as any).rpgMode = false;
+        globalTerminalApp.addOutput('Exiting RPG mode...');
+        globalTerminalApp.addOutput('');
+        // Execute the new game command
+        globalTerminalApp.executeCommand(cmd);
+        return;
+    }
+    
+    switch (cmd) {
         case 'help':
             globalTerminalApp.addOutput('Available commands:');
             globalTerminalApp.addOutput('  ls - Look around');
@@ -2128,6 +2143,8 @@ function processRpgCommand(command: string): void {
             globalTerminalApp.addOutput('  heal - Use healing potion');
             globalTerminalApp.addOutput('  explore - Explore for treasures (+10 XP)');
             globalTerminalApp.addOutput('  status - Show your stats');
+            globalTerminalApp.addOutput('  commandrace - Switch to Command Race game');
+            globalTerminalApp.addOutput('  puzzle - Switch to Puzzle game');
             globalTerminalApp.addOutput('  quit - Exit RPG mode');
             break;
             
@@ -2245,6 +2262,25 @@ function processCommandRaceCommand(command: string): void {
     
     const cmd = command.toLowerCase().trim();
     
+    // Allow switching to other games from Command Race mode
+    if (cmd === 'rpg' || cmd === 'puzzle') {
+        // Clear any countdown timer
+        if (commandRaceCountdownTimer) {
+            clearTimeout(commandRaceCountdownTimer);
+            commandRaceCountdownTimer = null;
+        }
+        
+        // Exit Command Race mode first
+        commandRaceMode = false;
+        (window as any).commandRaceMode = false;
+        commandRaceState = 'waiting';
+        globalTerminalApp.addOutput('Exiting Command Race mode...');
+        globalTerminalApp.addOutput('');
+        // Execute the new game command
+        globalTerminalApp.executeCommand(cmd);
+        return;
+    }
+    
     // Handle quit command in any state
     if (cmd === 'quit') {
         // Clear any countdown timer
@@ -2272,7 +2308,7 @@ function processCommandRaceCommand(command: string): void {
         if (cmd === 'start') {
             startCommandRaceCountdown();
         } else {
-            globalTerminalApp.addOutput('Type "start" to begin the race or "quit" to exit.');
+            globalTerminalApp.addOutput('Type "start" to begin the race, or switch games with "rpg"/"puzzle", or "quit" to exit.');
         }
     } else if (commandRaceState === 'countdown') {
         globalTerminalApp.addOutput('Please wait for the countdown to finish!');
